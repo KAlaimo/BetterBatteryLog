@@ -1,0 +1,83 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:visibility="visible"
+              android:padding="16dp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="15"
+        android:id="@+id/LRButtonLayout"
+        android:focusable="false"
+        android:weightSum="2"
+        android:visibility="visible">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:text="Left"
+            android:id="@+id/leftButton"
+            android:layout_weight="1"
+            android:background="#ff6580e7"
+            android:textSize="@dimen/abc_text_size_display_1_material"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:text="Right"
+            android:id="@+id/rightButton"
+            android:layout_weight="1"
+            android:background="#ffe75031"
+            android:textSize="@dimen/abc_text_size_display_1_material"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:id="@+id/GaugeLayout">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/leftProgressBar"
+            android:layout_weight="1"
+            android:max="100"
+            android:progress="50"
+            android:indeterminate="false"
+            android:visibility="visible"/>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/rightProgressBar"
+            android:layout_weight="1"
+            android:max="100"
+            android:progress="50"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="75"
+        android:id="@+id/LogLayout"
+        >
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/logListView"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="3"
+            android:visibility="visible"/>
+
+    </LinearLayout>
+
+</LinearLayout>

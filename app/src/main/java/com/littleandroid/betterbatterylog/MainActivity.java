@@ -23,7 +23,8 @@ public class MainActivity extends ActionBarActivity {
 
         mBatteryLog = BatteryLog.get(this);
         mLogListView = (ListView) findViewById(R.id.logListView);
-        ArrayAdapter<BatteryEntry> adapter = new ArrayAdapter<BatteryEntry>(getApplication(), R.layout.list_item_battery, mBatteryLog.getBatteries());
+        BatteryListAdapter adapter = new BatteryListAdapter(this, mBatteryLog.getBatteries());
+        //ArrayAdapter<BatteryEntry> adapter = new ArrayAdapter<BatteryEntry>(getApplication(), R.layout.list_item_battery, mBatteryLog.getBatteries());
         mLogListView.setAdapter(adapter);
 
         mLeftProgressBar = (ProgressBar) findViewById(R.id.leftProgressBar);

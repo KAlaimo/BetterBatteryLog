@@ -57,6 +57,10 @@ public class BatteryLog {
         return mBatteryLog;
     }
 
+    public Context getAppContext () {
+        return mAppContext;
+    }
+
     public ArrayList<BatteryEntry> getBatteries() {
         return mBatteries;
     }

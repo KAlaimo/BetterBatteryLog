@@ -25,17 +25,26 @@ public class BatteryLog {
         Date today = new Date();
         for(int i = 0; i < 10; ++i) {
             BatteryEntry b;
+
+            /** alternate between left and right */
             if(i % 2 == 0) {
                 b = new BatteryEntry(Side.LEFT);
             }
             else {
                 b = new BatteryEntry(Side.RIGHT);
             }
-            Date installDate = new Date(today.getTime() - (DateUtils.DAY_IN_MILLIS * i * 7));
-            b.setInstallDate(installDate);
-            if(i > 1) {
-                Date diedDate = new Date(installDate.getTime() + (DateUtils.DAY_IN_MILLIS  * 14));
-                b.setDiedDate(diedDate);
+
+            if(i == 0) {
+                Date installDate = new Date(today.getTime() - DateUtils.DAY_IN_MILLIS);
+                b.setInstallDate(installDate);
+            }
+            else if (i > 0) {
+                Date installDate = new Date(today.getTime() - (DateUtils.DAY_IN_MILLIS * i * 7));
+                b.setInstallDate(installDate);
+                if (i > 1) {
+                    Date diedDate = new Date(installDate.getTime() + (DateUtils.DAY_IN_MILLIS * 14));
+                    b.setDiedDate(diedDate);
+                }
             }
             mBatteries.add(b);
         }

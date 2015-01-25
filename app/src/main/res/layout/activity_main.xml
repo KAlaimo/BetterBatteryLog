@@ -18,7 +18,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:text="Left"
+            android:text="@string/left"
             android:id="@+id/leftButton"
             android:layout_weight="1"
             android:background="@color/color_left_blue"
@@ -29,7 +29,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:text="Right"
+            android:text="@string/right"
             android:id="@+id/rightButton"
             android:layout_weight="1"
             android:background="@color/color_right_red"
@@ -57,7 +57,7 @@
             style="@android:style/Widget.ProgressBar.Horizontal"
             android:padding="0dp"
             android:progressDrawable="@drawable/progress_bar_color_left"
-            android:background="@color/color_light_gray"
+            android:background="@drawable/progress_background"
             android:layout_margin="4dp"/>
 
         <ProgressBar
@@ -70,7 +70,7 @@
             style="@android:style/Widget.ProgressBar.Horizontal"
             android:padding="0dp"
             android:progressDrawable="@drawable/progress_bar_color_right"
-            android:background="@color/color_light_gray"
+            android:background="@drawable/progress_background"
             android:layout_margin="4dp"/>
     </LinearLayout>
 

@@ -1,5 +1,7 @@
 package com.littleandroid.betterbatterylog;
 
+import android.text.format.DateUtils;
+
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -57,6 +59,27 @@ public class BatteryEntry {
 
     public void setLost(boolean lost) {
         mLost = lost;
+    }
+
+    public boolean isCurrent() {
+        if(!mLost && mDiedDate == null) {
+            return true;
+        }
+        return false;
+    }
+
+    public int getLifeSpanDays() {
+        int days = 0;
+        if(mDiedDate != null) {
+           long milliSecs = mDiedDate.getTime() - mInstallDate.getTime();
+           days = (int)(milliSecs/ DateUtils.DAY_IN_MILLIS);
+        }
+        else {
+            Date today = new Date();
+            long milliSecs = today.getTime() - mInstallDate.getTime();
+            days = (int)(milliSecs/ DateUtils.DAY_IN_MILLIS);
+        }
+        return days;
     }
 
     @Override

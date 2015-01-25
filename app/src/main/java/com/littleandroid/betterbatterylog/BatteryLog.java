@@ -23,7 +23,6 @@ public class BatteryLog {
 
         /** For testing, start with 10 fake entries */
         Date today = new Date();
-        BatteryEntry prevEntry = null;
         for(int i = 0; i < 10; ++i) {
             BatteryEntry b;
             if(i % 2 == 0) {
@@ -32,14 +31,13 @@ public class BatteryLog {
             else {
                 b = new BatteryEntry(Side.RIGHT);
             }
-            Date installDate = new Date(today.getTime() - (DateUtils.DAY_IN_MILLIS * i * 14));
+            Date installDate = new Date(today.getTime() - (DateUtils.DAY_IN_MILLIS * i * 7));
             b.setInstallDate(installDate);
-            if(prevEntry != null) {
-                prevEntry.setDiedDate(b.getInstallDate());
+            if(i > 1) {
+                Date diedDate = new Date(installDate.getTime() + (DateUtils.DAY_IN_MILLIS  * 14));
+                b.setDiedDate(diedDate);
             }
             mBatteries.add(b);
-
-            prevEntry = b;
         }
     }
 
@@ -63,5 +61,38 @@ public class BatteryLog {
         return null;
     }
 
+    public int averageLifeInDays(Side side) {
+        int count = 0;
+        int daySum = 0;
+        int avg = 0;
 
+        for(BatteryEntry b : mBatteries) {
+            if(side == b.getSide() && !b.isLost() && b.getDiedDate() != null) {
+                ++count;
+                daySum = daySum + b.getLifeSpanDays();
+            }
+        }
+        if(count > 0) {
+            avg = daySum / count;
+        }
+        return avg;
+    }
+
+    public BatteryEntry getCurrentBattery(Side side) {
+        for(BatteryEntry b : mBatteries) {
+            if(side == b.getSide() && b.isCurrent()) {
+                return b;
+            }
+        }
+        return null;
+    }
+
+    public int getCurrentLifeDays(Side side) {
+        int days = 0;
+        BatteryEntry b = getCurrentBattery(side);
+        if(b != null) {
+            days = b.getLifeSpanDays();
+        }
+        return days;
+    }
 }

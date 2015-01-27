@@ -1,15 +1,16 @@
 package com.littleandroid.betterbatterylog;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.ListActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ListActivity {
 
     private BatteryLog mBatteryLog;
     private ListView mLogListView;
@@ -22,9 +23,8 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         mBatteryLog = BatteryLog.get(this);
-        mLogListView = (ListView) findViewById(R.id.logListView);
+        mLogListView = (ListView) findViewById(android.R.id.list);
         BatteryListAdapter adapter = new BatteryListAdapter(this, mBatteryLog.getBatteries());
-        //ArrayAdapter<BatteryEntry> adapter = new ArrayAdapter<BatteryEntry>(getApplication(), R.layout.list_item_battery, mBatteryLog.getBatteries());
         mLogListView.setAdapter(adapter);
 
         mLeftProgressBar = (ProgressBar) findViewById(R.id.leftProgressBar);
@@ -61,6 +61,17 @@ public class MainActivity extends ActionBarActivity {
         }
         else {
             mRightProgressBar.setProgress(0);
+        }
+    }
+
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        if(l == mLogListView) {
+            BatteryListAdapter adapter = (BatteryListAdapter) l.getAdapter();
+            BatteryEntry b = adapter.getItem(position);
+
+            Toast toast = Toast.makeText(this, b.toString(), Toast.LENGTH_SHORT);
+            toast.show();
         }
     }
 

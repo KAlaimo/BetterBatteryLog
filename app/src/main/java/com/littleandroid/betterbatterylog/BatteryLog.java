@@ -23,7 +23,7 @@ public class BatteryLog {
 
         /** For testing, start with 10 fake entries */
         Date today = new Date();
-        for(int i = 0; i < 10; ++i) {
+        for(int i = 0; i < 20; ++i) {
             BatteryEntry b;
 
             /** alternate between left and right */

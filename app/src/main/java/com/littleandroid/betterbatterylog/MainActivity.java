@@ -1,6 +1,6 @@
 package com.littleandroid.betterbatterylog;
 
-import android.app.ListActivity;
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,18 +10,14 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 
-public class MainActivity extends ListActivity {
-
-    private BatteryLog mBatteryLog;
-    private ListView mLogListView;
-    private ProgressBar mLeftProgressBar;
-    private ProgressBar mRightProgressBar;
+public class MainActivity extends Activity implements BatteryListFragment.SelectionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.fragment_activity_main);
 
+        /**
         mBatteryLog = BatteryLog.get(this);
         mLogListView = (ListView) findViewById(android.R.id.list);
         BatteryListAdapter adapter = new BatteryListAdapter(this, mBatteryLog.getBatteries());
@@ -29,41 +25,18 @@ public class MainActivity extends ListActivity {
 
         mLeftProgressBar = (ProgressBar) findViewById(R.id.leftProgressBar);
         mRightProgressBar = (ProgressBar) findViewById(R.id.rightProgressBar);
-        updateProgress();
+        updateProgress(); */
     }
 
-    private void updateProgress() {
-        int leftAvg = mBatteryLog.averageLifeInDays(Side.LEFT);
-        int rightAvg = mBatteryLog.averageLifeInDays(Side.RIGHT);
-        BatteryEntry currentLeft = mBatteryLog.getCurrentBattery(Side.LEFT);
-        BatteryEntry currentRight = mBatteryLog.getCurrentBattery(Side.RIGHT);
-
-        mLeftProgressBar.setMax(leftAvg);
-        mRightProgressBar.setMax(rightAvg);
-
-        if(currentLeft != null) {
-            if (currentLeft.getLifeSpanDays() > leftAvg) {
-                mLeftProgressBar.setProgress(leftAvg);
-            } else {
-                mLeftProgressBar.setProgress(currentLeft.getLifeSpanDays());
-            }
-        }
-        else {
-            mLeftProgressBar.setProgress(0);
-        }
-
-        if(currentRight != null) {
-            if (currentRight.getLifeSpanDays() > rightAvg) {
-                mRightProgressBar.setProgress(rightAvg);
-            } else {
-                mRightProgressBar.setProgress(currentRight.getLifeSpanDays());
-            }
-        }
-        else {
-            mRightProgressBar.setProgress(0);
-        }
+    @Override
+    public void onItemSelected(int position) {
+        BatteryLog batteryLog = BatteryLog.get(this);
+        BatteryEntry b = batteryLog.getBatteries().get(position);
+        Toast toast = Toast.makeText(this, b.toString(), Toast.LENGTH_SHORT);
+        toast.show();
     }
 
+    /**
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         if(l == mLogListView) {
@@ -73,7 +46,7 @@ public class MainActivity extends ListActivity {
             Toast toast = Toast.makeText(this, b.toString(), Toast.LENGTH_SHORT);
             toast.show();
         }
-    }
+    } */
 
 
     @Override

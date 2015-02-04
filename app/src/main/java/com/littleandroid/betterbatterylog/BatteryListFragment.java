@@ -84,4 +84,10 @@ public class BatteryListFragment extends ListFragment {
         mCallback.onItemSelected(position);
 
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        BatteryLog.get(getActivity()).saveBatteryLog();
+    }
 }

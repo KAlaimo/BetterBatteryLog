@@ -2,6 +2,7 @@ package com.littleandroid.betterbatterylog;
 
 import android.content.Context;
 import android.text.format.DateUtils;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,6 +13,7 @@ import java.util.UUID;
  */
 public class BatteryLog {
 
+    private static final String TAG = "BBL-BatteryLog";
     private static final String FILENAME = "batterylog.json";
 
     private static BatteryLog mBatteryLog;
@@ -22,11 +24,24 @@ public class BatteryLog {
     /** Private constructor for singleton */
     private BatteryLog(Context appContext) {
         mAppContext = appContext;
-        mBatteries = new ArrayList<BatteryEntry>();
 
         mSerializer = new BatteryLogJSONSerializer(mAppContext, FILENAME);
+        try {
+            mBatteries = mSerializer.loadBatteryLog();
+            Log.i(TAG, "File loaded.");
+            if(mBatteries.isEmpty()) {
+                addFakeEntries();
+            }
+        } catch (Exception e) {
+            mBatteries = new ArrayList<>();
+            addFakeEntries();
+        }
+    }
 
-        /** For testing, start with 10 fake entries */
+    private void addFakeEntries() {
+
+        Log.i(TAG, "No file. Faking it...");
+        /** For testing, start with 20 fake entries */
         Date today = new Date();
         for(int i = 0; i < 20; ++i) {
             BatteryEntry b;

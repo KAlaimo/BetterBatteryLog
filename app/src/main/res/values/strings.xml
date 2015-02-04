@@ -7,7 +7,5 @@
     <string name="right">Right</string>
     <string name="symbol_left">L</string>
     <string name="symbol_right">R</string>
-    <string name="title_activity_main_activity_list">MainActivityList</string>
-    <string name="hello_world">Hello world!</string>
 
 </resources>

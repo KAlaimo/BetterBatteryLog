@@ -11,15 +11,20 @@ import java.util.UUID;
  * Created by Kristen on 1/23/2015.
  */
 public class BatteryLog {
+
+    private static final String FILENAME = "batterylog.json";
+
     private static BatteryLog mBatteryLog;
     private Context mAppContext;
-
     private ArrayList<BatteryEntry> mBatteries;
+    private BatteryLogJSONSerializer mSerializer;
 
     /** Private constructor for singleton */
     private BatteryLog(Context appContext) {
         mAppContext = appContext;
         mBatteries = new ArrayList<BatteryEntry>();
+
+        mSerializer = new BatteryLogJSONSerializer(mAppContext, FILENAME);
 
         /** For testing, start with 10 fake entries */
         Date today = new Date();
@@ -55,6 +60,15 @@ public class BatteryLog {
             mBatteryLog = new BatteryLog(c.getApplicationContext());
         }
         return mBatteryLog;
+    }
+
+    public boolean saveBatteryLog() {
+        try {
+            mSerializer.saveBatteryLog(mBatteries);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public Context getAppContext () {

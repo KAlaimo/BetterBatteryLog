@@ -59,7 +59,11 @@ public class BatteryListFragment extends ListFragment {
         super.onActivityCreated(savedInstanceState);
 
         Log.i(TAG, "Entered onActivityCreated()");
+
+        // Get context
         Context c = this.getView().getContext();
+
+        // Get the BatteryLog and set the adapter
         BatteryLog batteryLog = BatteryLog.get(c);
         BatteryListAdapter adapter = new BatteryListAdapter(c, batteryLog.getBatteries());
         setListAdapter(adapter);

@@ -29,12 +29,12 @@ public class BatteryLog {
         try {
             mBatteries = mSerializer.loadBatteryLog();
             Log.i(TAG, "File loaded.");
-            if(mBatteries.isEmpty()) {
-                addFakeEntries();
-            }
+            //if(mBatteries.isEmpty()) {
+            //    addFakeEntries();
+            //}
         } catch (Exception e) {
             mBatteries = new ArrayList<>();
-            addFakeEntries();
+            //addFakeEntries();
         }
     }
 
@@ -66,7 +66,7 @@ public class BatteryLog {
                     b.setDiedDate(diedDate);
                 }
             }
-            mBatteries.add(b);
+            addBattery(b);
         }
     }
 
@@ -92,6 +92,12 @@ public class BatteryLog {
 
     public ArrayList<BatteryEntry> getBatteries() {
         return mBatteries;
+    }
+
+    public void addBattery(BatteryEntry b) {
+        if(b != null) {
+            mBatteries.add(b);
+        }
     }
 
     public BatteryEntry getBattery(UUID id) {

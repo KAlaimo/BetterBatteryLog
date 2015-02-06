@@ -136,6 +136,7 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
                 }
                 DatePickerFragment frag = DatePickerFragment.newInstance(d, BatteryEntryActivity.this);
                 mDatePickerTag = TAG_INSTALL_PICKER;
+                Log.i(TAG, "Showing install date picker.");
                 frag.show(getFragmentManager(), mDatePickerTag);
             }
         });
@@ -147,10 +148,11 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
             public void onClick(View v) {
                 Date d = mBattery.getDiedDate();
                 if(d == null) {
-                    d = new Date();
+                   d = new Date();
                 }
                 DatePickerFragment frag = DatePickerFragment.newInstance(d, BatteryEntryActivity.this);
                 mDatePickerTag = TAG_DIED_PICKER;
+                Log.i(TAG, "Showing died date picker.");
                 frag.show(getFragmentManager(), mDatePickerTag);
             }
         });
@@ -202,7 +204,7 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
             Intent intent = new Intent();
             try {
                 intent.putExtra(JSON_EXTRA, mBattery.toJSON().toString());
-                setResult(RESULT_OK);
+                setResult(RESULT_OK, intent);
             } catch(JSONException e) {
                 Log.e(TAG, e.toString());
                 setResult(RESULT_CANCELED);

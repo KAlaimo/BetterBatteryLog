@@ -1,5 +1,6 @@
 package com.littleandroid.betterbatterylog;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by Kristen on 1/27/2015.
@@ -64,6 +68,27 @@ public class ButtonGaugeFragment extends Fragment {
         Intent explicitIntent = new Intent(getView().getContext(), BatteryEntryActivity.class);
         explicitIntent.putExtra(BatteryEntryActivity.SIDE_EXTRA, side.ordinal());
         startActivityForResult(explicitIntent, NEW_ENTRY_REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == Activity.RESULT_OK) {
+            if(requestCode == NEW_ENTRY_REQUEST_CODE) {
+                if(data != null) {
+                    String jsonString = data.getStringExtra(BatteryEntryActivity.JSON_EXTRA);
+                    try {
+                        BatteryEntry b = new BatteryEntry(new JSONObject(jsonString));
+                        //mBatteryLog.addBattery(b);
+                        Log.i(TAG, "added " + b.toString());
+                    } catch (JSONException e) {
+                        Log.e(TAG, e.toString());
+                    }
+                } else {
+                    Log.e(TAG, "No intent data found.");
+                }
+            }
+
+        }
     }
 
     private void updateProgress() {

@@ -21,12 +21,15 @@ import org.json.JSONObject;
 public class ButtonGaugeFragment extends Fragment {
 
     private static final String TAG = "BBL-ButtonGaugeFragment";
-    private static final int NEW_ENTRY_REQUEST_CODE = 1;
+
+    public interface AddBatteryListener {
+        public void onAddBattery(Side side);
+    }
+
+    private AddBatteryListener mCallback;
 
     private ProgressBar mLeftProgressBar;
     private ProgressBar mRightProgressBar;
-    private Button mLeftButton;
-    private Button mRightButton;
     private BatteryLog mBatteryLog;
 
     @Override
@@ -43,55 +46,43 @@ public class ButtonGaugeFragment extends Fragment {
         Log.i(TAG, "Entered onActivityCreated()");
         mLeftProgressBar = (ProgressBar)getActivity().findViewById(R.id.leftProgressBar);
         mRightProgressBar = (ProgressBar)getActivity().findViewById(R.id.rightProgressBar);
-        mLeftButton = (Button)getActivity().findViewById(R.id.leftBigButton);
-        mRightButton = (Button)getActivity().findViewById(R.id.rightBigButton);
+        Button leftButton = (Button)getActivity().findViewById(R.id.leftBigButton);
+        Button rightButton = (Button)getActivity().findViewById(R.id.rightBigButton);
         mBatteryLog = BatteryLog.get(getView().getContext());
 
-        mLeftButton.setOnClickListener(new View.OnClickListener() {
+        leftButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startBatteryEntryActivity(Side.LEFT);
+                if(mCallback != null) {
+                    mCallback.onAddBattery(Side.LEFT);
+                }
             }
         });
 
-        mRightButton.setOnClickListener(new View.OnClickListener() {
+        rightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startBatteryEntryActivity(Side.RIGHT);
+                if(mCallback != null) {
+                    mCallback.onAddBattery(Side.RIGHT);
+                }
             }
         });
 
         updateProgress();
     }
 
-    private void startBatteryEntryActivity(Side side) {
-        Intent explicitIntent = new Intent(getView().getContext(), BatteryEntryActivity.class);
-        explicitIntent.putExtra(BatteryEntryActivity.SIDE_EXTRA, side.ordinal());
-        startActivityForResult(explicitIntent, NEW_ENTRY_REQUEST_CODE);
-    }
-
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == Activity.RESULT_OK) {
-            if(requestCode == NEW_ENTRY_REQUEST_CODE) {
-                if(data != null) {
-                    String jsonString = data.getStringExtra(BatteryEntryActivity.JSON_EXTRA);
-                    try {
-                        BatteryEntry b = new BatteryEntry(new JSONObject(jsonString));
-                        //mBatteryLog.addBattery(b);
-                        Log.i(TAG, "added " + b.toString());
-                    } catch (JSONException e) {
-                        Log.e(TAG, e.toString());
-                    }
-                } else {
-                    Log.e(TAG, "No intent data found.");
-                }
-            }
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
 
+        try {
+            mCallback = (AddBatteryListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement AddBatteryListener");
         }
     }
 
-    private void updateProgress() {
+    public void updateProgress() {
         int leftAvg = mBatteryLog.averageLifeInDays(Side.LEFT);
         int rightAvg = mBatteryLog.averageLifeInDays(Side.RIGHT);
         BatteryEntry currentLeft = mBatteryLog.getCurrentBattery(Side.LEFT);

@@ -10,12 +10,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import java.util.Comparator;
+import java.util.Date;
+
 /**
  * Created by Kristen on 1/27/2015.
  */
 public class BatteryListFragment extends ListFragment {
 
     private static final String TAG = "BBL-ListFragment";
+    private BatteryLog mBatteryLog;
 
     public interface SelectionListener {
         public void onItemSelected(int position);
@@ -64,9 +68,12 @@ public class BatteryListFragment extends ListFragment {
         Context c = this.getView().getContext();
 
         // Get the BatteryLog and set the adapter
-        BatteryLog batteryLog = BatteryLog.get(c);
-        BatteryListAdapter adapter = new BatteryListAdapter(c, batteryLog.getBatteries());
+        mBatteryLog = BatteryLog.get(c);
+        BatteryListAdapter adapter = new BatteryListAdapter(c, mBatteryLog.getBatteries());
         setListAdapter(adapter);
+
+        // sort list
+        sortListByInstallDate();
     }
 
     @Override
@@ -89,5 +96,44 @@ public class BatteryListFragment extends ListFragment {
     public void onPause() {
         super.onPause();
         BatteryLog.get(getActivity()).saveBatteryLog();
+    }
+
+    public void addBatteryToList(BatteryEntry b) {
+        // get most recent battery in log for this side
+        BatteryEntry currBattery = mBatteryLog.getCurrentBattery(b.getSide());
+        // set its died date to the new battery's install date.
+        if(currBattery != null) {
+            currBattery.setDiedDate(b.getInstallDate());
+        }
+
+        // now add the new battery to the list
+        try {
+            BatteryListAdapter adapter = (BatteryListAdapter) getListAdapter();
+            adapter.add(b);
+            sortListByInstallDate();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(getListAdapter().toString() + " must be BatteryListAdapter");
+        }
+    }
+
+    public void sortListByInstallDate() {
+        try {
+            BatteryListAdapter adapter = (BatteryListAdapter) getListAdapter();
+            adapter.sort(new Comparator<BatteryEntry>() {
+                @Override
+                public int compare(BatteryEntry lhs, BatteryEntry rhs) {
+                    Date lhsDate = lhs.getInstallDate();
+                    Date rhsDate = rhs.getInstallDate();
+                    return rhsDate.compareTo(lhsDate);
+                }
+            });
+
+        } catch (ClassCastException e) {
+            throw new ClassCastException(getListAdapter().toString() + " must be BatteryListAdapter");
+        }
+    }
+
+    public int getListCount() {
+        return getListAdapter().getCount();
     }
 }

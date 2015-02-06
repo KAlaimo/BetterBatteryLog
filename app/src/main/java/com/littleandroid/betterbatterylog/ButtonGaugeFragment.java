@@ -1,6 +1,8 @@
 package com.littleandroid.betterbatterylog;
 
 import android.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import android.widget.ProgressBar;
 public class ButtonGaugeFragment extends Fragment {
 
     private static final String TAG = "BBL-ButtonGaugeFragment";
+    private static final int NEW_ENTRY_REQUEST_CODE = 1;
 
     private ProgressBar mLeftProgressBar;
     private ProgressBar mRightProgressBar;
@@ -29,6 +32,7 @@ public class ButtonGaugeFragment extends Fragment {
 
     }
 
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -39,7 +43,27 @@ public class ButtonGaugeFragment extends Fragment {
         mRightButton = (Button)getActivity().findViewById(R.id.rightBigButton);
         mBatteryLog = BatteryLog.get(getView().getContext());
 
+        mLeftButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startBatteryEntryActivity(Side.LEFT);
+            }
+        });
+
+        mRightButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startBatteryEntryActivity(Side.RIGHT);
+            }
+        });
+
         updateProgress();
+    }
+
+    private void startBatteryEntryActivity(Side side) {
+        Intent explicitIntent = new Intent(getView().getContext(), BatteryEntryActivity.class);
+        explicitIntent.putExtra(BatteryEntryActivity.SIDE_EXTRA, side.ordinal());
+        startActivityForResult(explicitIntent, NEW_ENTRY_REQUEST_CODE);
     }
 
     private void updateProgress() {

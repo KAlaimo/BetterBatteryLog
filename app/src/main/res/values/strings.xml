@@ -7,5 +7,11 @@
     <string name="right">Right</string>
     <string name="symbol_left">L</string>
     <string name="symbol_right">R</string>
+    <string name="title_activity_battery_entry">New Battery</string>
+    <string name="battery_install">Installed on</string>
+    <string name="battery_died">Died on</string>
+    <string name="side_select">Which hearing aid?</string>
+    <string name="battery_lost">Lost or discarded?</string>
+
 
 </resources>

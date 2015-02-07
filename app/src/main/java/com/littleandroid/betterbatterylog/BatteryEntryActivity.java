@@ -5,6 +5,9 @@ import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,12 +35,14 @@ import java.util.Locale;
 public class BatteryEntryActivity extends ActionBarActivity implements OnDateSetListener {
 
     private static final String TAG = "BBL-BatteryEntryActivity";
-
     public static final String TAG_INSTALL_PICKER = "installDatePicker";
     public static final String TAG_DIED_PICKER = "diedDatePicker";
-    public static final String SIDE_EXTRA = "setSideRequest";
-    public static final String JSON_EXTRA = "jsonString";
-    public static final String DATE_KEY = "logDate";
+
+    public static final String SIDE_EXTRA = "setSideRequestExtra";
+    public static final String JSON_EXTRA = "jsonStringExtra";
+
+    public static final String DATE_KEY = "logDateKey";
+    private static final String JSON_KEY = "jsonStringKey";
 
     private TextView mInstallDateTV;
     private TextView mDiedDateTV;
@@ -88,26 +93,24 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_battery_entry);
 
-        // Setup OK Button
-        Button okButton = (Button) findViewById(R.id.okButton);
-        okButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                acceptEntry(true);
-            }
-        });
-
-        // Setup Cancel Button
-        Button cancelButton = (Button) findViewById(R.id.cancelButton);
-        cancelButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                acceptEntry(false);
-            }
-        });
+        // If there is a savedInstanceState...
+        if(savedInstanceState != null) {
+            mBattery = BatteryEntry.getInstanceFromJSONString(savedInstanceState.getString(JSON_KEY));
+        } // If no savedInstanceState, then find what extra data has been sent, and initialize mBattery.
+        else if(getIntent().hasExtra(JSON_EXTRA)) {
+            mBattery = BatteryEntry.getInstanceFromJSONString(getIntent().getStringExtra(JSON_EXTRA));
+        } else if(getIntent().hasExtra(SIDE_EXTRA)) {
+            Side side = Side.values()[getIntent().getIntExtra(SIDE_EXTRA, Side.LEFT.ordinal())];
+            mBattery = new BatteryEntry(side);
+        }
+        // If we failed to get battery info, create a new default BatteryEntry.
+        if(mBattery == null) {
+            mBattery = new BatteryEntry(Side.LEFT);
+        }
 
         // Setup Lost checkbox
         CheckBox lostCheckBox = (CheckBox) findViewById(R.id.lostCheckBox);
+        lostCheckBox.setChecked(mBattery.isLost());
         lostCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -115,15 +118,14 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
             }
         });
 
-        // Get Side value from Intent extra and initialize mBattery.
-        Side side = Side.values()[getIntent().getIntExtra(SIDE_EXTRA, Side.LEFT.ordinal())];
-        mBattery = new BatteryEntry(side);
 
         // Setup install Date TextView
         mInstallDateTV = (TextView) findViewById(R.id.installDateTextView);
+        displayInstallDate();
 
         // Setup died Date TextView
         mDiedDateTV = (TextView) findViewById(R.id.diedDateTextView);
+        displayDiedDate();
 
         // Setup install date ImageButton.
         ImageButton installImageButton = (ImageButton) findViewById(R.id.pickInstallDateButton);
@@ -159,19 +161,33 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
 
         // Setup the Left-Right switch
         mLeftRightSwitch = (Switch) findViewById(R.id.leftRightSwitch);
-        setSwitch(side);
+        setSwitch(mBattery.getSide());
         mLeftRightSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked) {
-                    mLeftRightSwitch.setBackgroundColor(getResources().getColor(R.color.color_right_red));
+                    mBattery.setSide(Side.RIGHT);
+                    setSwitchColor(getResources().getColor(R.color.color_right_red));
                 }
                 else {
-                    mLeftRightSwitch.setBackgroundColor(getResources().getColor(R.color.color_left_blue));
+                    mBattery.setSide(Side.LEFT);
+                    setSwitchColor(getResources().getColor(R.color.color_left_blue));
                 }
             }
         });
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        if(mBattery != null) {
+            try {
+                savedInstanceState.putString(JSON_KEY, mBattery.toJSON().toString());
+            } catch (JSONException e) {
+                Log.e(TAG, e.toString());
+            }
+        }
     }
 
     @Override
@@ -180,23 +196,49 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
         Log.i(TAG, "Tag: " + mDatePickerTag);
         if(mDatePickerTag == TAG_INSTALL_PICKER) {
             mBattery.setInstallDate(cal.getTime());
-            mInstallDateTV.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(mBattery.getInstallDate()));
+            displayInstallDate();
         }
         else {
             mBattery.setDiedDate(cal.getTime());
-            mDiedDateTV.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(mBattery.getDiedDate()));
+            displayDiedDate();
+        }
+    }
+
+    private void displayInstallDate() {
+        if(mBattery != null) {
+            if(mBattery.getInstallDate() != null) {
+                mInstallDateTV.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(mBattery.getInstallDate()));
+            } else {
+                mInstallDateTV.setText(R.string.not_set);
+            }
+        }
+    }
+
+    private void displayDiedDate() {
+        if(mBattery != null) {
+            if(mBattery.getDiedDate() != null) {
+                mDiedDateTV.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(mBattery.getDiedDate()));
+            } else {
+                mDiedDateTV.setText(R.string.not_set);
+            }
         }
     }
 
     private void setSwitch(Side side) {
         if(side == Side.LEFT) {
             mLeftRightSwitch.setChecked(false);
-            mLeftRightSwitch.setBackgroundColor(getResources().getColor(R.color.color_left_blue));
+            setSwitchColor(getResources().getColor(R.color.color_left_blue));
         } else {
             mLeftRightSwitch.setChecked(true);
-            mLeftRightSwitch.setBackgroundColor(getResources().getColor(R.color.color_right_red));
+            setSwitchColor(getResources().getColor(R.color.color_right_red));
         }
         mBattery.setSide(side);
+    }
+
+    private void setSwitchColor(int color) {
+       // mLeftRightSwitch.setBackgroundColor(color);
+        Drawable d = mLeftRightSwitch.getThumbDrawable();
+        d.setColorFilter(color, PorterDuff.Mode.SRC);
     }
 
     private void acceptEntry(boolean accept) {
@@ -231,7 +273,16 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_menu_ok) {
+            acceptEntry(true);
+            return true;
+        }
+        else if(id == R.id.action_menu_cancel) {
+            acceptEntry(false);
+            return true;
+        }
+        else if(id == R.id.action_menu_delete) {
+            // TODO: ask to delete.
             return true;
         }
 

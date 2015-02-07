@@ -2,8 +2,26 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.littleandroid.betterbatterylog.BatteryEntryActivity">
-    <item android:id="@+id/action_settings"
-          android:title="@string/action_settings"
-          android:orderInCategory="100"
+
+    <item android:id="@+id/action_menu_cancel"
+          android:title="@android:string/cancel"
+          android:icon="@android:drawable/ic_menu_close_clear_cancel"
+          android:orderInCategory="48"
+          app:showAsAction="ifRoom|withText" />
+
+    <item android:id="@+id/action_menu_ok"
+          android:title="@android:string/ok"
+          android:icon="@android:drawable/ic_menu_save"
+          android:orderInCategory="50"
+          app:showAsAction="ifRoom|withText" />
+
+    <item android:id="@+id/action_menu_clear"
+          android:title="@string/clear"
+          android:orderInCategory="60"
+          app:showAsAction="never" />
+
+    <item android:id="@+id/action_menu_delete"
+          android:title="@string/delete"
+          android:orderInCategory="62"
           app:showAsAction="never"/>
 </menu>

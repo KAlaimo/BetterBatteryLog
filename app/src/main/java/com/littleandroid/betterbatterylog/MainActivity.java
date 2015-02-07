@@ -1,22 +1,19 @@
 package com.littleandroid.betterbatterylog;
 
-import android.app.Activity;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class MainActivity extends Activity implements BatteryListFragment.SelectionListener, ButtonGaugeFragment.AddBatteryListener {
+public class MainActivity extends ActionBarActivity implements BatteryListFragment.SelectionListener, ButtonGaugeFragment.AddBatteryListener {
 
     private static final String TAG = "BBL-MainActivity";
     private static final int NEW_ENTRY_REQUEST_CODE = 1;
@@ -48,13 +45,9 @@ public class MainActivity extends Activity implements BatteryListFragment.Select
             if(requestCode == NEW_ENTRY_REQUEST_CODE) {
                 if(data != null) {
                     String jsonString = data.getStringExtra(BatteryEntryActivity.JSON_EXTRA);
-                    try {
-                        BatteryEntry b = new BatteryEntry(new JSONObject(jsonString));
-                        addBattery(b);
-                        updateProgress();
-                    } catch (JSONException e) {
-                        Log.e(TAG, e.toString());
-                    }
+                    BatteryEntry b = BatteryEntry.getInstanceFromJSONString(jsonString);
+                    addBattery(b);
+                    updateProgress();
                 } else {
                     Log.e(TAG, "No intent data found.");
                 }

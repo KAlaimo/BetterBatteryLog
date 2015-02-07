@@ -1,6 +1,7 @@
 package com.littleandroid.betterbatterylog;
 
 import android.text.format.DateUtils;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,6 +14,7 @@ import java.util.UUID;
  * Created by Kristen on 1/23/2015.
  */
 public class BatteryEntry {
+    private static final String TAG = "BBL-BatteryEntry";
     private static final String JSON_UUID = "id";
     private static final String JSON_SIDE = "side";
     private static final String JSON_INSTALL_DATE = "installed";
@@ -119,6 +121,17 @@ public class BatteryEntry {
         }
         json.put(JSON_LOST, mLost);
         return json;
+    }
+
+    public static BatteryEntry getInstanceFromJSONString(String jsonString) {
+        try {
+            BatteryEntry b = new BatteryEntry(new JSONObject(jsonString));
+            return b;
+        } catch (JSONException e) {
+            Log.e(TAG, e.toString());
+        }
+
+        return null;
     }
 
     @Override

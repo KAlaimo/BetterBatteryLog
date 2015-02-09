@@ -59,6 +59,12 @@ public class BatteryListFragment extends ListFragment {
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallback = null;
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -88,8 +94,9 @@ public class BatteryListFragment extends ListFragment {
             throw new ClassCastException(l.getAdapter().toString() + " must be BatteryListAdapter");
         }
 
-        mCallback.onItemSelected(position);
-
+        if(mCallback != null) {
+            mCallback.onItemSelected(position);
+        }
     }
 
     @Override

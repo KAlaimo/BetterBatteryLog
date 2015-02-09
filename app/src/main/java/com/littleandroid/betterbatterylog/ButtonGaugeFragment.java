@@ -82,6 +82,12 @@ public class ButtonGaugeFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallback = null;
+    }
+
     public void updateProgress() {
         int leftAvg = mBatteryLog.averageLifeInDays(Side.LEFT);
         int rightAvg = mBatteryLog.averageLifeInDays(Side.RIGHT);

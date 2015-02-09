@@ -5,13 +5,13 @@
 
     <item android:id="@+id/action_menu_cancel"
           android:title="@android:string/cancel"
-          android:icon="@android:drawable/ic_menu_close_clear_cancel"
+          android:icon="@drawable/ic_action_cancel"
           android:orderInCategory="48"
           app:showAsAction="ifRoom|withText" />
 
     <item android:id="@+id/action_menu_ok"
           android:title="@android:string/ok"
-          android:icon="@android:drawable/ic_menu_save"
+          android:icon="@drawable/ic_action_accept"
           android:orderInCategory="50"
           app:showAsAction="ifRoom|withText" />
 

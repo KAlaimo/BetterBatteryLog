@@ -3,6 +3,7 @@ package com.littleandroid.betterbatterylog;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -22,6 +23,9 @@ public class MainActivity extends ActionBarActivity implements BatteryListFragme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_activity_main);
+
+        // Initialize with default settings.
+        PreferenceManager.setDefaultValues(this, R.xml.fragment_preference, false);
     }
 
     @Override
@@ -99,6 +103,8 @@ public class MainActivity extends ActionBarActivity implements BatteryListFragme
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent settingsIntent = new Intent(this, UserSettingsActivity.class);
+            startActivity(settingsIntent);
             return true;
         }
 

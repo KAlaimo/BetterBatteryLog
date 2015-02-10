@@ -135,6 +135,19 @@ public class BatteryEntry {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if(this == o) {
+            return true;
+        }
+        else if(!(o instanceof BatteryEntry)) {
+            return false;
+        }
+
+        BatteryEntry b = (BatteryEntry)o;
+        return this.getId().equals(b.getId());
+    }
+
+    @Override
     public String toString() {
         return mSide + " " + DateFormat.getInstance().format(mInstallDate);
     }

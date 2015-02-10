@@ -11,13 +11,13 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 
-public class MainActivity extends ActionBarActivity implements BatteryListFragment.SelectionListener, ButtonGaugeFragment.AddBatteryListener {
+public class MainActivity extends ActionBarActivity implements BatteryListFragment.BatteryListListener, ButtonGaugeFragment.AddBatteryListener {
 
     private static final String TAG = "BBL-MainActivity";
     private static final int NEW_ENTRY_REQUEST_CODE = 1;
+    private static final int ENTRY_EDIT_REQUEST_CODE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +44,17 @@ public class MainActivity extends ActionBarActivity implements BatteryListFragme
     }
 
     @Override
+    public void onEditBattery(BatteryEntry b) {
+        Intent explicitIntent = new Intent(this, BatteryEntryActivity.class);
+        try {
+            explicitIntent.putExtra(BatteryEntryActivity.JSON_EXTRA, b.toJSON().toString());
+            startActivityForResult(explicitIntent, ENTRY_EDIT_REQUEST_CODE);
+        } catch (JSONException e) {
+            Log.e(TAG, e.toString());
+        }
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode == RESULT_OK) {
             if(requestCode == NEW_ENTRY_REQUEST_CODE) {
@@ -55,7 +66,15 @@ public class MainActivity extends ActionBarActivity implements BatteryListFragme
                 } else {
                     Log.e(TAG, "No intent data found.");
                 }
+            } else if(requestCode == ENTRY_EDIT_REQUEST_CODE) {
+                if(data != null) {
+                    String jsonString = data.getStringExtra(BatteryEntryActivity.JSON_EXTRA);
+                    BatteryEntry b = BatteryEntry.getInstanceFromJSONString(jsonString);
+                    updateBattery(b);
+                    updateProgress();
+                }
             }
+
 
         }
     }
@@ -64,6 +83,13 @@ public class MainActivity extends ActionBarActivity implements BatteryListFragme
         BatteryListFragment frag = (BatteryListFragment) getFragmentManager().findFragmentById(R.id.fragmentBatteryList);
         if(frag != null) {
             frag.addBatteryToList(b);
+        }
+    }
+
+    private void updateBattery(BatteryEntry b) {
+        BatteryListFragment frag = (BatteryListFragment) getFragmentManager().findFragmentById(R.id.fragmentBatteryList);
+        if(frag != null) {
+            frag.updateBattery(b);
         }
     }
 

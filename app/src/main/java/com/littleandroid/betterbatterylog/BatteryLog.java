@@ -109,6 +109,20 @@ public class BatteryLog {
         return null;
     }
 
+    public boolean deleteBattery(BatteryEntry b) {
+        return mBatteries.remove(b);
+    }
+
+    public boolean updateBattery(BatteryEntry b) {
+        // find entry in log with same ID as b. Remove entry and replace with b.
+        BatteryEntry oldBattery = getBattery(b.getId());
+        if(oldBattery != null) {
+            mBatteries.remove(oldBattery);
+            mBatteries.add(b);
+        }
+        return false;
+    }
+
     public int averageLifeInDays(Side side) {
         int count = 0;
         int daySum = 0;

@@ -70,7 +70,12 @@ public class MainActivity extends ActionBarActivity implements BatteryListFragme
                 if(data != null) {
                     String jsonString = data.getStringExtra(BatteryEntryActivity.JSON_EXTRA);
                     BatteryEntry b = BatteryEntry.getInstanceFromJSONString(jsonString);
-                    updateBattery(b);
+                    if(data.hasExtra(BatteryEntryActivity.DELETE_FLAG_EXTRA)) {
+                        deleteBattery(b);
+                    }
+                    else {
+                        updateBattery(b);
+                    }
                     updateProgress();
                 }
             }
@@ -91,6 +96,13 @@ public class MainActivity extends ActionBarActivity implements BatteryListFragme
         if(frag != null) {
             frag.updateBattery(b);
         }
+    }
+
+    private void deleteBattery(BatteryEntry b) {
+        BatteryListFragment frag = (BatteryListFragment) getFragmentManager().findFragmentById(R.id.fragmentBatteryList);
+        if(frag != null) {
+            frag.deleteBattery(b);
+            frag.sortListByInstallDate();                    }
     }
 
     private void updateProgress() {

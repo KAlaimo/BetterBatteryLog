@@ -1,9 +1,11 @@
 package com.littleandroid.betterbatterylog;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -40,6 +42,7 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
 
     public static final String SIDE_EXTRA = "setSideRequestExtra";
     public static final String JSON_EXTRA = "jsonStringExtra";
+    public static final String DELETE_FLAG_EXTRA = "deleteFlagExtra";
 
     public static final String DATE_KEY = "logDateKey";
     private static final String JSON_KEY = "jsonStringKey";
@@ -258,6 +261,42 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
         finish();
     }
 
+    private void deleteEntry() {
+        Intent intent = new Intent();
+        try {
+            intent.putExtra(JSON_EXTRA, mBattery.toJSON().toString());
+            intent.putExtra(DELETE_FLAG_EXTRA, true);
+            setResult(RESULT_OK, intent);
+        } catch(JSONException e) {
+            Log.e(TAG, e.toString());
+            setResult(RESULT_CANCELED);
+        }
+        finish();
+    }
+
+    private void confirmationDialog() {
+        // Build the AlertDialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.delete);
+        builder.setMessage(R.string.delete_entry);
+        // The positive button choice calls deleteEntry.
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deleteEntry();
+            }
+        });
+        // The negative button displays the cancel string.
+        builder.setNegativeButton(android.R.string.cancel, null);
+
+        // Dialog will display a system info icon.
+        //builder.setIcon(android.R.drawable.ic_dialog_info);
+
+        // Create the dialog and show it.
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -282,7 +321,7 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
             return true;
         }
         else if(id == R.id.action_menu_delete) {
-            // TODO: ask to delete.
+            confirmationDialog();
             return true;
         }
 

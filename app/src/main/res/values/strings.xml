@@ -13,6 +13,7 @@
     <string name="side_select">Which hearing aid?</string>
     <string name="battery_lost">Lost or discarded?</string>
     <string name="delete">Delete</string>
+    <string name="delete_entry">Delete this entry?</string>
     <string name="edit">Edit</string>
     <string name="clear">Clear</string>
     <string name="not_set">(not set)</string>

@@ -73,7 +73,7 @@ public class BatteryListFragment extends ListFragment {
 
                         for(int i = adapter.getCount() - 1; i >= 0; --i) {
                             if(getListView().isItemChecked(i)) {
-                                mBatteryLog.deleteBattery(adapter.getItem(i));
+                                deleteBattery(adapter.getItem(i));
                             }
                         }
                         mode.finish();
@@ -194,6 +194,12 @@ public class BatteryListFragment extends ListFragment {
         if(b != null) {
             mBatteryLog.updateBattery(b);
             sortListByInstallDate();
+        }
+    }
+
+    public void deleteBattery(BatteryEntry b) {
+        if(b != null) {
+            mBatteryLog.deleteBattery(b);
         }
     }
 

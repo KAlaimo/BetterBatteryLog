@@ -16,30 +16,28 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:text="@string/new_left"
-            android:drawableLeft="@drawable/ic_action_new"
+            android:drawableLeft="@android:drawable/ic_menu_add"
             android:id="@+id/leftBigButton"
             android:layout_weight="1"
             android:background="@color/color_left_blue"
-            android:layout_margin="0dp"
-            android:textColor="@android:color/black"
+            style="?android:attr/actionButtonStyle"
             android:enabled="true"
             android:gravity="center_vertical"
-            android:padding="8dp"
+
             />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:text="@string/new_right"
-            android:drawableLeft="@drawable/ic_action_new"
+            android:drawableLeft="@android:drawable/ic_menu_add"
             android:id="@+id/rightBigButton"
             android:layout_weight="1"
             android:background="@color/color_right_red"
-            android:layout_margin="0dp"
-            android:textColor="@android:color/black"
+            style="?android:attr/actionButtonStyle"
             android:enabled="true"
             android:gravity="center_vertical"
-            android:padding="8dp"
+
             />
     </LinearLayout>
 

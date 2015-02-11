@@ -31,6 +31,10 @@ public class BatteryEntry {
     public BatteryEntry(Side side) {
         mUUID = UUID.randomUUID();
         mSide = side;
+        setDefaultValues();
+    }
+
+    public void setDefaultValues() {
         mInstallDate = new Date();
         mDiedDate = null;
         mLost = false;

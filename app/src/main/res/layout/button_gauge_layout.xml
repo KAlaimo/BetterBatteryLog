@@ -7,8 +7,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="10"
+        android:layout_height="?android:attr/actionBarSize"
         android:id="@+id/LRButtonLayout"
         android:focusable="false"
         android:visibility="visible">
@@ -16,36 +15,38 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:text="@string/left"
+            android:text="@string/new_left"
+            android:drawableLeft="@drawable/ic_action_new"
             android:id="@+id/leftBigButton"
             android:layout_weight="1"
             android:background="@color/color_left_blue"
-            android:textSize="20dp"
-            android:padding="2dp"
-            android:layout_margin="4dp"
+            android:layout_margin="0dp"
             android:textColor="@android:color/black"
-            android:enabled="true"/>
+            android:enabled="true"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:text="@string/right"
+            android:text="@string/new_right"
+            android:drawableLeft="@drawable/ic_action_new"
             android:id="@+id/rightBigButton"
             android:layout_weight="1"
             android:background="@color/color_right_red"
-            android:textSize="20dp"
-            android:padding="2dp"
-            android:layout_margin="4dp"
+            android:layout_margin="0dp"
             android:textColor="@android:color/black"
             android:enabled="true"
+            android:gravity="center_vertical"
+            android:padding="8dp"
             />
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="2"
+        android:layout_height="24dp"
         android:id="@+id/GaugeLayout">
 
         <ProgressBar

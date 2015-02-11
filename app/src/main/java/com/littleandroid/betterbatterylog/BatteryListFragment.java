@@ -169,7 +169,9 @@ public class BatteryListFragment extends ListFragment {
     @Override
     public void onPause() {
         super.onPause();
-        BatteryLog.get(getActivity()).saveBatteryLog();
+        if(mBatteryLog != null) {
+            mBatteryLog.saveBatteryLog();
+        }
     }
 
     public void addBatteryToList(BatteryEntry b) {

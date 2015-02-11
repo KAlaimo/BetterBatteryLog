@@ -52,6 +52,9 @@ public class BatteryListAdapter extends ArrayAdapter<BatteryEntry> {
             if(b.isLost()) {
                 diedDateTV.setTextColor(mContext.getResources().getColor(R.color.color_light_gray));
             }
+            else {
+                diedDateTV.setTextColor(mContext.getResources().getColor(R.color.color_dark_gray));
+            }
         }
         else {
             diedDateTV.setText(" ");

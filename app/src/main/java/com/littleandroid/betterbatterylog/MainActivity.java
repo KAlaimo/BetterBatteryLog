@@ -94,6 +94,7 @@ public class MainActivity extends ActionBarActivity implements BatteryListFragme
     private void updateBattery(BatteryEntry b) {
         BatteryListFragment frag = (BatteryListFragment) getFragmentManager().findFragmentById(R.id.fragmentBatteryList);
         if(frag != null) {
+            Log.i(TAG, "Update " + b.toString());
             frag.updateBattery(b);
         }
     }

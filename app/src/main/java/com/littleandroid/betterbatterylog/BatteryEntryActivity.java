@@ -50,6 +50,7 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
     private TextView mInstallDateTV;
     private TextView mDiedDateTV;
     private Switch mLeftRightSwitch;
+    private CheckBox mLostCheckBox;
     private BatteryEntry mBattery;
     private static String mDatePickerTag;
 
@@ -112,9 +113,9 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
         }
 
         // Setup Lost checkbox
-        CheckBox lostCheckBox = (CheckBox) findViewById(R.id.lostCheckBox);
-        lostCheckBox.setChecked(mBattery.isLost());
-        lostCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mLostCheckBox = (CheckBox) findViewById(R.id.lostCheckBox);
+        mLostCheckBox.setChecked(mBattery.isLost());
+        mLostCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mBattery.setLost(isChecked);
@@ -322,6 +323,12 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
         }
         else if(id == R.id.action_menu_delete) {
             confirmationDialog();
+            return true;
+        }
+        else if(id == R.id.action_menu_clear) {
+            mBattery.setDiedDate(null);
+            displayDiedDate();
+            mLostCheckBox.setChecked(false);
             return true;
         }
 

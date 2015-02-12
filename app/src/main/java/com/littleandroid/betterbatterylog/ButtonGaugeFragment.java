@@ -4,16 +4,22 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Kristen on 1/27/2015.
@@ -28,6 +34,8 @@ public class ButtonGaugeFragment extends Fragment {
 
     private AddBatteryListener mCallback;
 
+    private Button mLeftButton;
+    private Button mRightButton;
     private ProgressBar mLeftProgressBar;
     private ProgressBar mRightProgressBar;
     private BatteryLog mBatteryLog;
@@ -43,30 +51,34 @@ public class ButtonGaugeFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        // Find views
         Log.i(TAG, "Entered onActivityCreated()");
         mLeftProgressBar = (ProgressBar)getActivity().findViewById(R.id.leftProgressBar);
         mRightProgressBar = (ProgressBar)getActivity().findViewById(R.id.rightProgressBar);
-        Button leftButton = (Button)getActivity().findViewById(R.id.leftBigButton);
-        Button rightButton = (Button)getActivity().findViewById(R.id.rightBigButton);
+        mLeftButton = (Button)getActivity().findViewById(R.id.leftBigButton);
+        mRightButton = (Button)getActivity().findViewById(R.id.rightBigButton);
         mBatteryLog = BatteryLog.get(getView().getContext());
 
-        leftButton.setOnClickListener(new View.OnClickListener() {
+        setButtonPreferences();
+
+        mLeftButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mCallback != null) {
+                if (mCallback != null) {
                     mCallback.onAddBattery(Side.LEFT);
                 }
             }
         });
 
-        rightButton.setOnClickListener(new View.OnClickListener() {
+        mRightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mCallback != null) {
+                if (mCallback != null) {
                     mCallback.onAddBattery(Side.RIGHT);
                 }
             }
         });
+
 
         updateProgress();
     }
@@ -118,5 +130,76 @@ public class ButtonGaugeFragment extends Fragment {
         else {
             mRightProgressBar.setProgress(0);
         }
+    }
+
+    public void setButtonPreferences() {
+
+        // Configure according to our preferences.
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        if(prefs != null) {
+            try {
+                String earPrefString = prefs.getString(getString(R.string.pref_which_ears), null);
+                if (earPrefString != null) {
+
+                    int earIndex = Integer.parseInt(earPrefString);
+                    if (earIndex == 1) {
+                        // Use left only...
+                       hideRightWidgets();
+                    } else if (earIndex == 2) {
+                        // Use right only...
+                        hideLeftWidgets();
+                    } else {
+                        // Use both...
+                        showLeftAndRightWidgets();
+                    }
+                }
+            } catch(ClassCastException e) {
+                Log.e(TAG, e.toString());
+            }
+        }
+    }
+
+    private void hideLeftWidgets() {
+        LinearLayout.LayoutParams hiddenLayout = new LinearLayout.LayoutParams(0,0);
+        LinearLayout.LayoutParams fullLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
+        mLeftButton.setVisibility(Button.INVISIBLE);
+        mLeftButton.setLayoutParams(hiddenLayout);
+        mRightButton.setVisibility(Button.VISIBLE);
+        mRightButton.setLayoutParams(fullLayout);
+        mLeftProgressBar.setVisibility(ProgressBar.INVISIBLE);
+        mRightProgressBar.setVisibility(ProgressBar.VISIBLE);
+        ViewGroup.LayoutParams params = mRightProgressBar.getLayoutParams();
+        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        mRightProgressBar.setLayoutParams(params);
+    }
+
+    private void hideRightWidgets() {
+        LinearLayout.LayoutParams hiddenLayout = new LinearLayout.LayoutParams(0,0);
+        LinearLayout.LayoutParams fullLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
+        mLeftButton.setVisibility(Button.VISIBLE);
+        mLeftButton.setLayoutParams(fullLayout);
+        mRightButton.setVisibility(Button.INVISIBLE);
+        mRightButton.setLayoutParams(hiddenLayout);
+        mLeftProgressBar.setVisibility(ProgressBar.VISIBLE);
+        ViewGroup.LayoutParams params = mLeftProgressBar.getLayoutParams();
+        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        mLeftProgressBar.setLayoutParams(params);
+        mRightProgressBar.setVisibility(ProgressBar.INVISIBLE);
+    }
+
+    private void showLeftAndRightWidgets() {
+        LinearLayout.LayoutParams normalButtonLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.MATCH_PARENT,1f);
+        mLeftButton.setVisibility(Button.VISIBLE);
+        mLeftButton.setLayoutParams(normalButtonLayout);
+        mRightButton.setVisibility(Button.VISIBLE);
+        mRightButton.setLayoutParams(normalButtonLayout);
+        mLeftProgressBar.setVisibility(ProgressBar.VISIBLE);
+        ViewGroup.LayoutParams lParams = mLeftProgressBar.getLayoutParams();
+        lParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        mLeftProgressBar.setLayoutParams(lParams);
+        mRightProgressBar.setVisibility(ProgressBar.VISIBLE);
+        ViewGroup.LayoutParams rParams = mRightProgressBar.getLayoutParams();
+        rParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        mRightProgressBar.setLayoutParams(rParams);
     }
 }

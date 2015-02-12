@@ -18,6 +18,7 @@ public class MainActivity extends ActionBarActivity implements BatteryListFragme
     private static final String TAG = "BBL-MainActivity";
     private static final int NEW_ENTRY_REQUEST_CODE = 1;
     private static final int ENTRY_EDIT_REQUEST_CODE = 2;
+    private static final int CHANGE_SETTINGS_REQUEST_CODE = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,8 +80,10 @@ public class MainActivity extends ActionBarActivity implements BatteryListFragme
                     updateProgress();
                 }
             }
+        }
 
-
+        if(requestCode == CHANGE_SETTINGS_REQUEST_CODE) {
+            updatePreferences();
         }
     }
 
@@ -110,6 +113,13 @@ public class MainActivity extends ActionBarActivity implements BatteryListFragme
         ButtonGaugeFragment frag = (ButtonGaugeFragment) getFragmentManager().findFragmentById(R.id.fragmentButtonGauge);
         if(frag != null) {
             frag.updateProgress();
+        }
+    }
+
+    private void updatePreferences() {
+        ButtonGaugeFragment frag = (ButtonGaugeFragment) getFragmentManager().findFragmentById(R.id.fragmentButtonGauge);
+        if(frag != null) {
+            frag.setButtonPreferences();
         }
     }
 
@@ -143,7 +153,7 @@ public class MainActivity extends ActionBarActivity implements BatteryListFragme
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent settingsIntent = new Intent(this, UserSettingsActivity.class);
-            startActivity(settingsIntent);
+            startActivityForResult(settingsIntent, CHANGE_SETTINGS_REQUEST_CODE);
             return true;
         }
 

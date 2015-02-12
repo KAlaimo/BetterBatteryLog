@@ -20,8 +20,12 @@
     <string name="clear">Clear</string>
     <string name="not_set">(not set)</string>
     <string name="user_settings">User Settings</string>
-    <string name="use_both">Left and right hearing aids?</string>
-    <string name="use_both_summary">Uncheck if you only use one hearing aid.</string>
+    <string name="brand_pref">Battery brand</string>
+    <string name="brand_pref_summary">Set your preferred battery brand.</string>
+    <string name="ear_select">How many hearing aids</string>
+    <string name="ear_select_summary">Select left, right or both.</string>
     <string name="title_activity_user_settings">User Settings</string>
+    <string name="pref_which_ears">pref_which_ears</string>
+    <string name="pref_which_brand">pref_which_brand</string>
 
 </resources>

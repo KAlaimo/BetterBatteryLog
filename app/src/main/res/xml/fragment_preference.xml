@@ -4,11 +4,21 @@
         android:key="category_user"
         android:title="@string/user_settings">
 
-        <CheckBoxPreference
-            android:key="checkbox_use_both"
-            android:title="@string/use_both"
-            android:summary="@string/use_both_summary"
-            android:defaultValue="true" />
+        <ListPreference
+            android:key="@string/pref_which_ears"
+            android:title="@string/ear_select"
+            android:summary="@string/ear_select_summary"
+            android:defaultValue="0"
+            android:entries="@array/whichEars"
+            android:entryValues="@array/whichEarsValues" />
+
+        <ListPreference
+            android:key="@string/pref_which_brand"
+            android:title="@string/brand_pref"
+            android:summary="@string/brand_pref_summary"
+            android:defaultValue="2"
+            android:entries="@array/batteryBrands"
+            android:entryValues="@array/batteryBrandValues" />
 
 
     </PreferenceCategory>

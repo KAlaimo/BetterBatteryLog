@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.text.DateFormat;
 import java.util.ArrayList;
 
@@ -34,6 +36,7 @@ public class BatteryListAdapter extends ArrayAdapter<BatteryEntry> {
         TextView sideCharTV = (TextView) convertView.findViewById(R.id.sideCharTextView);
         TextView installDateTV = (TextView) convertView.findViewById(R.id.installDateTextView);
         TextView diedDateTV = (TextView) convertView.findViewById(R.id.diedDateTextView);
+        TextView batteryBrandTV = (TextView) convertView.findViewById(R.id.batteryBrandTextView);
 
         if(b.getSide() == Side.LEFT) {
             Drawable bg = mContext.getResources().getDrawable(R.drawable.background_left_blue);
@@ -59,6 +62,13 @@ public class BatteryListAdapter extends ArrayAdapter<BatteryEntry> {
         else {
             diedDateTV.setText(" ");
         }
+
+        if(b.getBatteryBrand() != null) {
+            batteryBrandTV.setText(b.getBatteryBrand());
+        } else {
+            batteryBrandTV.setText(" ");
+        }
+
 
         return convertView;
     }

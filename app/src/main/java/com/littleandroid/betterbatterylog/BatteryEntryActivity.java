@@ -17,17 +17,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import org.json.JSONException;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -50,6 +56,7 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
     private TextView mInstallDateTV;
     private TextView mDiedDateTV;
     private Switch mLeftRightSwitch;
+    private Spinner mBrandSpinner;
     private CheckBox mLostCheckBox;
     private BatteryEntry mBattery;
     private static String mDatePickerTag;
@@ -112,6 +119,37 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
             mBattery = new BatteryEntry(Side.LEFT);
         }
 
+        // if no brand selected...
+        SharedPreferencesHelper prefHelper = SharedPreferencesHelper.get(this);
+        if(mBattery.getBatteryBrand() == null) {
+            String prefBrand = prefHelper.getBrandPreference();
+            if(prefBrand != null) {
+                mBattery.setBatteryBrand(prefBrand);
+            }
+        }
+
+        // Setup brand spinner
+        mBrandSpinner = (Spinner) findViewById(R.id.brandSpinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, prefHelper.getBrandArrayList());
+        mBrandSpinner.setAdapter(adapter);
+        for(int i = 0; i < adapter.getCount(); ++i) {
+            if(adapter.getItem(i).equals(mBattery.getBatteryBrand())) {
+                mBrandSpinner.setSelection(i);
+            }
+        }
+
+        mBrandSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mBattery.setBatteryBrand(parent.getAdapter().getItem(position).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         // Setup Lost checkbox
         mLostCheckBox = (CheckBox) findViewById(R.id.lostCheckBox);
         mLostCheckBox.setChecked(mBattery.isLost());
@@ -121,7 +159,6 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
                 mBattery.setLost(isChecked);
             }
         });
-
 
         // Setup install Date TextView
         mInstallDateTV = (TextView) findViewById(R.id.installDateTextView);

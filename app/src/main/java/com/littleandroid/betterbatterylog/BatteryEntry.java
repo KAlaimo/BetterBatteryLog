@@ -20,13 +20,14 @@ public class BatteryEntry {
     private static final String JSON_INSTALL_DATE = "installed";
     private static final String JSON_DIED_DATE = "died";
     private static final String JSON_LOST = "lost";
+    private static final String JSON_BRAND = "brand";
 
     private UUID mUUID;
     private Side mSide;
     private Date mInstallDate;
     private Date mDiedDate;
     private boolean mLost;
-    /** TODO: consider adding battery brand info */
+    private String mBatteryBrand;
 
     public BatteryEntry(Side side) {
         mUUID = UUID.randomUUID();
@@ -38,6 +39,7 @@ public class BatteryEntry {
         mInstallDate = new Date();
         mDiedDate = null;
         mLost = false;
+        mBatteryBrand = null;
     }
 
     public BatteryEntry(JSONObject json) throws JSONException {
@@ -55,7 +57,12 @@ public class BatteryEntry {
         if(json.has(JSON_DIED_DATE)) {
             mDiedDate = new Date(json.getLong(JSON_DIED_DATE));
         }
+
         mLost = json.getBoolean(JSON_LOST);
+
+        if(json.has(JSON_BRAND)) {
+            mBatteryBrand = json.getString(JSON_BRAND);
+        }
     }
 
     public UUID getId() {
@@ -94,6 +101,14 @@ public class BatteryEntry {
         mLost = lost;
     }
 
+    public String getBatteryBrand() {
+        return mBatteryBrand;
+    }
+
+    public void setBatteryBrand(String brand) {
+        mBatteryBrand = brand;
+    }
+
     public boolean isCurrent() {
         if(!mLost && mDiedDate == null) {
             return true;
@@ -124,6 +139,9 @@ public class BatteryEntry {
             json.put(JSON_DIED_DATE, mDiedDate.getTime());
         }
         json.put(JSON_LOST, mLost);
+        if(mBatteryBrand != null) {
+            json.put(JSON_BRAND, mBatteryBrand);
+        }
         return json;
     }
 

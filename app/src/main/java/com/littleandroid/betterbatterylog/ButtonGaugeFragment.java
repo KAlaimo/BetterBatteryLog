@@ -135,28 +135,20 @@ public class ButtonGaugeFragment extends Fragment {
     public void setButtonPreferences() {
 
         // Configure according to our preferences.
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        if(prefs != null) {
-            try {
-                String earPrefString = prefs.getString(getString(R.string.pref_which_ears), null);
-                if (earPrefString != null) {
-
-                    int earIndex = Integer.parseInt(earPrefString);
-                    if (earIndex == 1) {
-                        // Use left only...
-                       hideRightWidgets();
-                    } else if (earIndex == 2) {
-                        // Use right only...
-                        hideLeftWidgets();
-                    } else {
-                        // Use both...
-                        showLeftAndRightWidgets();
-                    }
-                }
-            } catch(ClassCastException e) {
-                Log.e(TAG, e.toString());
-            }
+        SharedPreferencesHelper prefHelper = SharedPreferencesHelper.get(getActivity());
+        int earIndex = prefHelper.getEarPreference();
+        Log.i(TAG, "Ear " + earIndex);
+        Log.i(TAG, "Brand " + prefHelper.getBrandPreference());
+        if(earIndex == SharedPreferencesHelper.LEFT_ONLY) {
+            hideRightWidgets();
         }
+        else if(earIndex == SharedPreferencesHelper.RIGHT_ONLY) {
+            hideLeftWidgets();
+        }
+        else if(earIndex == SharedPreferencesHelper.BOTH_EARS) {
+            showLeftAndRightWidgets();
+        }
+
     }
 
     private void hideLeftWidgets() {

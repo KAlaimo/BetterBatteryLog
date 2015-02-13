@@ -35,7 +35,7 @@
         android:singleLine="true"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="96dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="- Date"
@@ -46,4 +46,19 @@
         android:padding="2dp"
         android:singleLine="true"
         android:textColor="@color/color_dark_gray"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmallInverse"
+        android:text="@string/battery_brand"
+        android:id="@+id/batteryBrandTextView"
+        android:layout_alignParentTop="false"
+        android:layout_toRightOf="@+id/diedDateTextView"
+        android:layout_toEndOf="@+id/diedDateTextView"
+        android:padding="2dp"
+        android:singleLine="true"
+        android:textColor="@color/color_dark_gray"
+        android:layout_centerVertical="true"/>
+
 </RelativeLayout>

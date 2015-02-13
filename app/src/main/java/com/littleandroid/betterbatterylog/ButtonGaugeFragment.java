@@ -137,8 +137,8 @@ public class ButtonGaugeFragment extends Fragment {
         // Configure according to our preferences.
         SharedPreferencesHelper prefHelper = SharedPreferencesHelper.get(getActivity());
         int earIndex = prefHelper.getEarPreference();
-        Log.i(TAG, "Ear " + earIndex);
-        Log.i(TAG, "Brand " + prefHelper.getBrandPreference());
+        //Log.i(TAG, "Ear " + earIndex);
+        //Log.i(TAG, "Brand " + prefHelper.getBrandPreference());
         if(earIndex == SharedPreferencesHelper.LEFT_ONLY) {
             hideRightWidgets();
         }

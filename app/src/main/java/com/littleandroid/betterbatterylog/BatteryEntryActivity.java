@@ -130,7 +130,7 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
 
         // Setup brand spinner
         mBrandSpinner = (Spinner) findViewById(R.id.brandSpinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, prefHelper.getBrandArrayList());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.simple_spinner_dropdown_item, prefHelper.getBrandArrayList());
         mBrandSpinner.setAdapter(adapter);
         for(int i = 0; i < adapter.getCount(); ++i) {
             if(adapter.getItem(i).equals(mBattery.getBatteryBrand())) {

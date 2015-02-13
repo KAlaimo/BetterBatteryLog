@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.Comparator;
 import java.util.Date;
@@ -40,9 +41,11 @@ public class BatteryListFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+        // Inflate the layout and find the ListView
         View v = inflater.inflate(R.layout.battery_log_layout, container, false);
         ListView listView = (ListView) v.findViewById(android.R.id.list);
+
+        // Setup multi choice mode on the ListView
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
             @Override

@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -81,6 +82,26 @@ public class ButtonGaugeFragment extends Fragment {
 
 
         updateProgress();
+
+        mLeftProgressBar.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                int days = mBatteryLog.getCurrentLifeDays(Side.LEFT);
+                Toast toast = Toast.makeText(v.getContext(), "Days: " + days, Toast.LENGTH_SHORT);
+                toast.show();
+                return true;
+            }
+        });
+
+        mRightProgressBar.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                int days = mBatteryLog.getCurrentLifeDays(Side.RIGHT);
+                Toast toast = Toast.makeText(v.getContext(), "Days: " + days, Toast.LENGTH_SHORT);
+                toast.show();
+                return true;
+            }
+        });
     }
 
     @Override
@@ -154,11 +175,11 @@ public class ButtonGaugeFragment extends Fragment {
     private void hideLeftWidgets() {
         LinearLayout.LayoutParams hiddenLayout = new LinearLayout.LayoutParams(0,0);
         LinearLayout.LayoutParams fullLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
-        mLeftButton.setVisibility(Button.INVISIBLE);
+        mLeftButton.setVisibility(Button.GONE);
         mLeftButton.setLayoutParams(hiddenLayout);
         mRightButton.setVisibility(Button.VISIBLE);
         mRightButton.setLayoutParams(fullLayout);
-        mLeftProgressBar.setVisibility(ProgressBar.INVISIBLE);
+        mLeftProgressBar.setVisibility(ProgressBar.GONE);
         mRightProgressBar.setVisibility(ProgressBar.VISIBLE);
         ViewGroup.LayoutParams params = mRightProgressBar.getLayoutParams();
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -170,13 +191,13 @@ public class ButtonGaugeFragment extends Fragment {
         LinearLayout.LayoutParams fullLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
         mLeftButton.setVisibility(Button.VISIBLE);
         mLeftButton.setLayoutParams(fullLayout);
-        mRightButton.setVisibility(Button.INVISIBLE);
+        mRightButton.setVisibility(Button.GONE);
         mRightButton.setLayoutParams(hiddenLayout);
         mLeftProgressBar.setVisibility(ProgressBar.VISIBLE);
         ViewGroup.LayoutParams params = mLeftProgressBar.getLayoutParams();
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
         mLeftProgressBar.setLayoutParams(params);
-        mRightProgressBar.setVisibility(ProgressBar.INVISIBLE);
+        mRightProgressBar.setVisibility(ProgressBar.GONE);
     }
 
     private void showLeftAndRightWidgets() {

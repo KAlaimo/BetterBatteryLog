@@ -19,8 +19,8 @@
             android:drawableLeft="@android:drawable/ic_menu_add"
             android:id="@+id/leftBigButton"
             android:layout_weight="1"
-            android:background="@color/color_left_blue"
-            style="?android:attr/actionButtonStyle"
+            android:background="@drawable/custom_button_blue"
+
             android:enabled="true"
             android:gravity="center_vertical"
 
@@ -33,8 +33,8 @@
             android:drawableLeft="@android:drawable/ic_menu_add"
             android:id="@+id/rightBigButton"
             android:layout_weight="1"
-            android:background="@color/color_right_red"
-            style="?android:attr/actionButtonStyle"
+            android:background="@drawable/custom_button_red"
+
             android:enabled="true"
             android:gravity="center_vertical"
 

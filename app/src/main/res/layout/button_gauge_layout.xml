@@ -19,7 +19,9 @@
             android:drawableLeft="@android:drawable/ic_menu_add"
             android:id="@+id/leftBigButton"
             android:layout_weight="1"
-            android:background="@drawable/custom_button_blue"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/button_shape_blue_shadowed"
 
             android:enabled="true"
             android:gravity="center_vertical"
@@ -33,7 +35,9 @@
             android:drawableLeft="@android:drawable/ic_menu_add"
             android:id="@+id/rightBigButton"
             android:layout_weight="1"
-            android:background="@drawable/custom_button_red"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/button_shape_red_shadowed"
 
             android:enabled="true"
             android:gravity="center_vertical"

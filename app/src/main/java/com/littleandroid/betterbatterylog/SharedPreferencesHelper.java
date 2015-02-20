@@ -13,7 +13,7 @@ import java.util.Arrays;
  */
 public class SharedPreferencesHelper {
 
-    private static final String TAG = "BBL-SharedPreferencesHelper";
+    private static final String TAG = "BBL-SharedPrefHelper";
 
     public static final int BOTH_EARS = 0;
     public static final int LEFT_ONLY = 1;

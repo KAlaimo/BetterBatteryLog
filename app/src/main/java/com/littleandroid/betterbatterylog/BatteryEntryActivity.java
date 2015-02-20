@@ -42,7 +42,7 @@ import java.util.Locale;
 
 public class BatteryEntryActivity extends ActionBarActivity implements OnDateSetListener {
 
-    private static final String TAG = "BBL-BatteryEntryActivity";
+    private static final String TAG = "BBL-BatteryEntry";
     public static final String TAG_INSTALL_PICKER = "installDatePicker";
     public static final String TAG_DIED_PICKER = "diedDatePicker";
 

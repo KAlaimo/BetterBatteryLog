@@ -4,5 +4,8 @@
     <item
         android:state_activated="true"
         android:drawable="@color/color_light_lavender" />
+    <item
+        android:state_pressed="true"
+        android:drawable="@color/color_lighter_lavender" />
 
 </selector>

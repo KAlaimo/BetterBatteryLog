@@ -30,14 +30,6 @@ public class MainActivity extends ActionBarActivity implements BatteryListFragme
     }
 
     @Override
-    public void onItemSelected(int position) {
-        BatteryLog batteryLog = BatteryLog.get(this);
-        BatteryEntry b = batteryLog.getBatteries().get(position);
-        Toast toast = Toast.makeText(this, b.toString(), Toast.LENGTH_SHORT);
-        toast.show();
-    }
-
-    @Override
     public void onAddBattery(Side side) {
         Intent explicitIntent = new Intent(this, BatteryEntryActivity.class);
         explicitIntent.putExtra(BatteryEntryActivity.SIDE_EXTRA, side.ordinal());

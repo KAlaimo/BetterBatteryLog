@@ -9,13 +9,14 @@
     <string name="new_right"> Right Battery</string>
     <string name="symbol_left">L</string>
     <string name="symbol_right">R</string>
-    <string name="title_activity_battery_entry">New Battery</string>
+    <string name="title_activity_battery_entry">Battery Details</string>
     <string name="battery_install">Installed on</string>
     <string name="battery_died">Died on</string>
     <string name="side_select">Which hearing aid?</string>
     <string name="battery_lost">Lost or discarded?</string>
     <string name="battery_brand">Battery brand</string>
     <string name="delete">Delete</string>
+    <string name="deleted">Deleted</string>
     <string name="delete_entry">Delete this entry?</string>
     <string name="edit">Edit</string>
     <string name="clear">Clear</string>

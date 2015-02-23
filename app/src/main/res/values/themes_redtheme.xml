@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="RedTheme" parent="@style/_RedTheme"/>
+
+  <style name="_RedTheme" parent="android:Theme.Holo.Light">
+
+    <item name="android:buttonStyle">@style/ButtonRedTheme</item>
+
+    <item name="android:imageButtonStyle">@style/ImageButtonRedTheme</item>
+
+    <item name="android:progressBarStyleHorizontal">@style/ProgressBarRedTheme</item>
+
+  </style>
+
+</resources>

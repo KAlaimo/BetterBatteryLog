@@ -19,14 +19,13 @@
             android:drawableLeft="@android:drawable/ic_menu_add"
             android:id="@+id/leftBigButton"
             android:layout_weight="1"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@drawable/button_shape_blue_shadowed"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
 
             android:enabled="true"
             android:gravity="center_vertical"
 
-            />
+            style="@style/ButtonBlueTheme"/>
 
         <Button
             android:layout_width="wrap_content"
@@ -35,14 +34,13 @@
             android:drawableLeft="@android:drawable/ic_menu_add"
             android:id="@+id/rightBigButton"
             android:layout_weight="1"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@drawable/button_shape_red_shadowed"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
 
             android:enabled="true"
             android:gravity="center_vertical"
 
-            />
+            style="@style/ButtonRedTheme"/>
     </LinearLayout>
 
     <LinearLayout
@@ -60,10 +58,9 @@
             android:progress="20"
             android:indeterminate="false"
             android:visibility="visible"
-            style="@android:style/Widget.ProgressBar.Horizontal"
+            style="@style/ProgressBarBlueTheme"
             android:padding="0dp"
             android:progressDrawable="@drawable/progress_bar_color_left"
-            android:background="@drawable/progress_background"
             android:layout_margin="4dp"/>
 
         <ProgressBar
@@ -75,10 +72,9 @@
             android:progress="50"
             android:indeterminate="false"
             android:visibility="visible"
-            style="@android:style/Widget.ProgressBar.Horizontal"
+            style="@style/ProgressBarRedTheme"
             android:padding="0dp"
             android:progressDrawable="@drawable/progress_bar_color_right"
-            android:background="@drawable/progress_background"
             android:layout_margin="4dp"/>
     </LinearLayout>
 

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="color_right_red">#ffe75032</color>
-    <color name="color_left_blue">#ff6580e7</color>
-    <color name="color_dark_gray">#ff54494B</color>
-    <color name="color_light_gray">#ffD8D4F2</color>
-    <color name="color_light_lavender">#ff9F7C94</color>
-    <color name="color_lighter_lavender">#ffbc96c0</color>
-    <color name="color_bright_blue">#ff192bc2</color>
-    <color name="color_bright_red">#ffb90b00</color>
+    <color name="color_right_red">#ffff4444</color>
+    <color name="color_left_blue">#ff2288aa</color>
+    <color name="color_dark_gray">#ff1f1f15</color>
+    <color name="color_light_gray">#4f4f54</color>
+    <color name="color_light_lavender">#ff7c606b</color>
+    <color name="color_lighter_lavender">#ffc0bcb5</color>
+    <color name="color_light_blue">#ffa7cfdd</color>
+    <color name="color_light_red">#ffffb4b4</color>
 </resources>

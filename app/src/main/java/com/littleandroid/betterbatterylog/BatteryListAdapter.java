@@ -39,11 +39,13 @@ public class BatteryListAdapter extends ArrayAdapter<BatteryEntry> {
         if(b.getSide() == Side.LEFT) {
             Drawable bg = mContext.getResources().getDrawable(R.drawable.background_left_blue);
             sideCharTV.setText(R.string.symbol_left);
+            sideCharTV.setTextColor(mContext.getResources().getColor(R.color.color_light_blue));
             sideCharTV.setBackground(bg);
         }
         else {
             Drawable bg = mContext.getResources().getDrawable(R.drawable.background_right_red);
             sideCharTV.setText(R.string.symbol_right);
+            sideCharTV.setTextColor(mContext.getResources().getColor(R.color.color_light_red));
             sideCharTV.setBackground(bg);
         }
 

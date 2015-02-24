@@ -20,6 +20,5 @@
         android:name="com.littleandroid.betterbatterylog.BatteryListFragment"
         android:id="@+id/fragmentBatteryList"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="4dp"
         tools:layout="@layout/battery_log_layout"/>
 </LinearLayout>

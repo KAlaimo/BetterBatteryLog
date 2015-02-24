@@ -27,77 +27,14 @@ public class BatteryListFragment extends ListFragment {
 
     private static final String TAG = "BBL-ListFragment";
     private BatteryLog mBatteryLog;
+    private TextView mMessageBarTV;
+    private BatteryListAdapter mAdapter;
 
     public interface BatteryListListener {
         public void onEditBattery(BatteryEntry b);
     }
 
-    private class BatteryListMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {
-        @Override
-        public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-            // not used here
-        }
-
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            MenuInflater inflater = mode.getMenuInflater();
-            inflater.inflate(R.menu.battery_list_item_context, menu);
-            return true;
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            // not used here
-            return false;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-
-            BatteryListAdapter adapter = (BatteryListAdapter) getListAdapter();
-            switch(item.getItemId()) {
-
-                case R.id.menu_item_delete :
-
-                    int delCount = 0;
-                    for(int i = adapter.getCount() - 1; i >= 0; --i) {
-                        if(getListView().isItemChecked(i)) {
-                            deleteBattery(adapter.getItem(i));
-                            ++delCount;
-                        }
-                    }
-                    mode.finish();
-                    adapter.notifyDataSetChanged();
-                    Toast toast = Toast.makeText(BatteryListFragment.this.getListView().getContext(), getText(R.string.deleted) + " " + delCount, Toast.LENGTH_SHORT);
-                    toast.show();
-                    return true;
-
-                case R.id.menu_item_edit :
-
-                    // find first selection and edit
-                    BatteryEntry b = null;
-                    for(int i = adapter.getCount() - 1; i >= 0 &&  b == null; --i) {
-                        if(getListView().isItemChecked(i)) {
-                            b = adapter.getItem(i);
-                            if(mCallback != null) {
-                                mCallback.onEditBattery(b);
-                            }
-                        }
-                    }
-                    mode.finish();
-                    return true;
-            }
-            return false;
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-            // not used here
-        }
-    }
-
     private BatteryListListener mCallback;
-    private BatteryListMultiChoiceModeListener mActionModeCallback;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,8 +49,73 @@ public class BatteryListFragment extends ListFragment {
 
         // Setup multi choice mode on the ListView
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        mActionModeCallback = new BatteryListMultiChoiceModeListener();
-        listView.setMultiChoiceModeListener(mActionModeCallback);
+        listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+                // not used here
+            }
+
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                Log.i(TAG, "onCreateActionMode");
+                MenuInflater inflater = mode.getMenuInflater();
+                inflater.inflate(R.menu.battery_list_item_context, menu);
+                mAdapter.clearSelectedPosition();
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                // not used here
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+
+                switch(item.getItemId()) {
+
+                    case R.id.menu_item_delete :
+
+                        int delCount = 0;
+                        for(int i = mAdapter.getCount() - 1; i >= 0; --i) {
+                            if(getListView().isItemChecked(i)) {
+                                deleteBattery(mAdapter.getItem(i));
+                                ++delCount;
+                            }
+                        }
+                        mode.finish();
+                        mAdapter.notifyDataSetChanged();
+                        Toast toast = Toast.makeText(BatteryListFragment.this.getListView().getContext(), getText(R.string.deleted) + " " + delCount, Toast.LENGTH_SHORT);
+                        toast.show();
+                        return true;
+
+                    case R.id.menu_item_edit :
+
+                        // find first selection and edit
+                        BatteryEntry b = null;
+                        for(int i = mAdapter.getCount() - 1; i >= 0 &&  b == null; --i) {
+                            if(getListView().isItemChecked(i)) {
+                                b = mAdapter.getItem(i);
+                                if(mCallback != null) {
+                                    mCallback.onEditBattery(b);
+                                }
+                            }
+                        }
+                        mode.finish();
+                        return true;
+                }
+                return false;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                // not used here
+            }
+        });
+
+        // Get message bar
+        mMessageBarTV = (TextView) v.findViewById(R.id.messageBar);
 
         return v;
 
@@ -141,7 +143,6 @@ public class BatteryListFragment extends ListFragment {
     public void onDetach() {
         super.onDetach();
         mCallback = null;
-        mActionModeCallback = null;
     }
 
     @Override
@@ -155,19 +156,35 @@ public class BatteryListFragment extends ListFragment {
 
         // Get the BatteryLog and set the adapter
         mBatteryLog = BatteryLog.get(c);
-        BatteryListAdapter adapter = new BatteryListAdapter(c, mBatteryLog.getBatteries());
-        setListAdapter(adapter);
+        mAdapter = new BatteryListAdapter(c, mBatteryLog.getBatteries());
+        setListAdapter(mAdapter);
 
         // sort list
         sortListByInstallDate();
+
+        // update message
+        String msg = c.getString(R.string.loaded) + " " + mAdapter.getCount();
+        mMessageBarTV.setText(msg);
     }
 
     @Override
     public void onListItemClick(ListView l, View view, int position, long id) {
-        if(mActionModeCallback != null) {
-            l.startActionMode(mActionModeCallback);
-            l.setItemChecked(position, true);
+        //Log.i(TAG, "onListItemClick");
+        if(mAdapter.getSelectedPosition() == position) {
+            mAdapter.clearSelectedPosition();
+            updateMessageBar(null);
         }
+        else {
+            mAdapter.setSelectedPosition(position);
+            BatteryEntry b = mAdapter.getItem(position);
+            updateMessageBar(b);
+        }
+        mAdapter.notifyDataSetChanged();
+
+        //if(mActionModeCallback != null) {
+        //    l.startActionMode(mActionModeCallback);
+        //    l.setItemChecked(position, true);
+        //}
     }
 
     @Override
@@ -187,13 +204,30 @@ public class BatteryListFragment extends ListFragment {
         }
 
         // now add the new battery to the list
-        try {
-            BatteryListAdapter adapter = (BatteryListAdapter) getListAdapter();
-            adapter.add(b);
-            sortListByInstallDate();
-        } catch (ClassCastException e) {
-            throw new ClassCastException(getListAdapter().toString() + " must be BatteryListAdapter");
+        mAdapter.add(b);
+        sortListByInstallDate();
+    }
+
+    private void updateMessageBar(BatteryEntry b) {
+        if(b != null) {
+            String brand = b.getBatteryBrand();
+            if(brand == null) {
+                brand = "";
+            }
+
+            int days = b.getLifeSpanDays();
+            if(b.isCurrent()) {
+                String msg = String.format("%s battery is %d days old.", brand, days);
+                mMessageBarTV.setText(msg);
+            }
+            else {
+                String msg = String.format("%s battery lasted %d days.", brand, days);
+                mMessageBarTV.setText(msg);
+            }
+        } else {
+            mMessageBarTV.setText("");
         }
+
     }
 
     public void updateBattery(BatteryEntry b) {
@@ -210,23 +244,15 @@ public class BatteryListFragment extends ListFragment {
     }
 
     public void sortListByInstallDate() {
-        try {
-            BatteryListAdapter adapter = (BatteryListAdapter) getListAdapter();
-            adapter.sort(new Comparator<BatteryEntry>() {
-                @Override
-                public int compare(BatteryEntry lhs, BatteryEntry rhs) {
-                    Date lhsDate = lhs.getInstallDate();
-                    Date rhsDate = rhs.getInstallDate();
-                    return rhsDate.compareTo(lhsDate);
-                }
-            });
 
-        } catch (ClassCastException e) {
-            throw new ClassCastException(getListAdapter().toString() + " must be BatteryListAdapter");
-        }
+        mAdapter.sort(new Comparator<BatteryEntry>() {
+            @Override
+            public int compare(BatteryEntry lhs, BatteryEntry rhs) {
+                Date lhsDate = lhs.getInstallDate();
+                Date rhsDate = rhs.getInstallDate();
+                return rhsDate.compareTo(lhsDate);
+            }
+        });
     }
 
-    public int getListCount() {
-        return getListAdapter().getCount();
-    }
 }

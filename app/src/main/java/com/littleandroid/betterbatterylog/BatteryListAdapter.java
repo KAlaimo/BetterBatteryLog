@@ -2,6 +2,7 @@ package com.littleandroid.betterbatterylog;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +17,15 @@ import java.util.ArrayList;
  */
 public class BatteryListAdapter extends ArrayAdapter<BatteryEntry> {
 
+    private static final String TAG = "BBL-BatteryListAdapter";
+
     private Context mContext;
+    private int mSelectedPosition;
 
     public BatteryListAdapter(Context c, ArrayList<BatteryEntry> batteries) {
         super(c, 0, batteries);
         mContext = c;
+        clearSelectedPosition();
     }
 
     @Override
@@ -69,7 +74,26 @@ public class BatteryListAdapter extends ArrayAdapter<BatteryEntry> {
             batteryBrandTV.setText(" ");
         }
 
+        if(position == mSelectedPosition) {
+            convertView.setBackgroundColor(mContext.getResources().getColor(R.color.color_lighter_lavender));
+        }
+        else {
+            convertView.setBackground(mContext.getResources().getDrawable(R.drawable.background_activated));
+        }
 
         return convertView;
     }
+
+    public void setSelectedPosition(int pos) {
+        mSelectedPosition = pos;
+    }
+
+    public int getSelectedPosition() {
+        return mSelectedPosition;
+    }
+
+    public void clearSelectedPosition() {
+        mSelectedPosition = -1;
+    }
+
 }

@@ -1,13 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:id="@+id/messageBarLayout"
+        android:background="@android:color/darker_gray" >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:gravity="center_vertical"
+            android:id="@+id/messageBar"
+            android:textColor="@color/color_dark_gray"
+            android:text="@string/loading" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12dp"
+            android:text="@string/undo"
+            android:id="@+id/undoButton"
+            android:drawableLeft="@drawable/ic_action_undo"
+            android:visibility="gone"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_margin="4dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_above="@id/messageBarLayout"
+        android:layout_alignWithParentIfMissing="true"
         android:orientation="vertical">
             <TextView
                 android:layout_width="wrap_content"
@@ -23,14 +57,5 @@
                 android:id="@android:id/list"
                 android:layout_gravity="center_horizontal"/>
         </LinearLayout>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="28dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:gravity="center_vertical"
-        android:id="@+id/messageBar"
-        android:background="@android:color/darker_gray"
-        android:textColor="@color/color_dark_gray"
-        android:text="@string/loading" />
-</LinearLayout>
+
+</RelativeLayout>

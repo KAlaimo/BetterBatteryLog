@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -13,10 +14,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 
@@ -25,10 +28,13 @@ import java.util.Date;
  */
 public class BatteryListFragment extends ListFragment {
 
-    private static final String TAG = "BBL-ListFragment";
+    //private static final String TAG = "BBL-ListFragment";
     private BatteryLog mBatteryLog;
+    private RelativeLayout mMessageBarGroup;
     private TextView mMessageBarTV;
+    private Button mUndoButton;
     private BatteryListAdapter mAdapter;
+    private ArrayList<BatteryEntry> mUndoList;
 
     public interface BatteryListListener {
         public void onEditBattery(BatteryEntry b);
@@ -42,10 +48,32 @@ public class BatteryListFragment extends ListFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout and find the ListView
         View v = inflater.inflate(R.layout.battery_log_layout, container, false);
         ListView listView = (ListView) v.findViewById(android.R.id.list);
+
+        // Find message bar layout
+        mMessageBarGroup = (RelativeLayout) v.findViewById(R.id.messageBarLayout);
+
+        // Find message bar
+        mMessageBarTV = (TextView) v.findViewById(R.id.messageBar);
+
+        // Find undo button
+        mUndoButton = (Button) v.findViewById(R.id.undoButton);
+        mUndoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mUndoList != null) {
+                    for(BatteryEntry b : mUndoList) {
+                        mBatteryLog.addBattery(b);
+                    }
+                    sortListByInstallDate();
+                }
+                clearUndoList();
+                hideMessageBar();
+            }
+        });
 
         // Setup multi choice mode on the ListView
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
@@ -57,10 +85,11 @@ public class BatteryListFragment extends ListFragment {
 
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                Log.i(TAG, "onCreateActionMode");
+                //Log.i(TAG, "onCreateActionMode");
                 MenuInflater inflater = mode.getMenuInflater();
                 inflater.inflate(R.menu.battery_list_item_context, menu);
                 mAdapter.clearSelectedPosition();
+                hideMessageBar();
                 return true;
             }
 
@@ -77,17 +106,15 @@ public class BatteryListFragment extends ListFragment {
 
                     case R.id.menu_item_delete :
 
-                        int delCount = 0;
+                        clearUndoList();
                         for(int i = mAdapter.getCount() - 1; i >= 0; --i) {
                             if(getListView().isItemChecked(i)) {
                                 deleteBattery(mAdapter.getItem(i));
-                                ++delCount;
                             }
                         }
                         mode.finish();
                         mAdapter.notifyDataSetChanged();
-                        Toast toast = Toast.makeText(BatteryListFragment.this.getListView().getContext(), getText(R.string.deleted) + " " + delCount, Toast.LENGTH_SHORT);
-                        toast.show();
+                        showUndoMessage();
                         return true;
 
                     case R.id.menu_item_edit :
@@ -113,9 +140,6 @@ public class BatteryListFragment extends ListFragment {
                 // not used here
             }
         });
-
-        // Get message bar
-        mMessageBarTV = (TextView) v.findViewById(R.id.messageBar);
 
         return v;
 
@@ -149,7 +173,7 @@ public class BatteryListFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Log.i(TAG, "Entered onActivityCreated()");
+        //Log.i(TAG, "Entered onActivityCreated()");
 
         // Get context
         Context c = this.getView().getContext();
@@ -180,11 +204,6 @@ public class BatteryListFragment extends ListFragment {
             updateMessageBar(b);
         }
         mAdapter.notifyDataSetChanged();
-
-        //if(mActionModeCallback != null) {
-        //    l.startActionMode(mActionModeCallback);
-        //    l.setItemChecked(position, true);
-        //}
     }
 
     @Override
@@ -203,6 +222,10 @@ public class BatteryListFragment extends ListFragment {
             currBattery.setDiedDate(b.getInstallDate());
         }
 
+        // clear undo list and hide message bar, selection not valid now.
+        clearUndoList();
+        hideMessageBar();
+
         // now add the new battery to the list
         mAdapter.add(b);
         sortListByInstallDate();
@@ -210,24 +233,37 @@ public class BatteryListFragment extends ListFragment {
 
     private void updateMessageBar(BatteryEntry b) {
         if(b != null) {
+            // Make sure view is visible
+            mMessageBarGroup.setVisibility(View.VISIBLE);
+            // Get side string
+            String side = (b.getSide() == Side.LEFT) ? getText(R.string.left).toString() : getText(R.string.right).toString();
+            // Get brand string
             String brand = b.getBatteryBrand();
             if(brand == null) {
                 brand = "";
             }
-
+            // Get lifespan in days
             int days = b.getLifeSpanDays();
+            // Format message and display
             if(b.isCurrent()) {
-                String msg = String.format("%s battery is %d days old.", brand, days);
+                String msg = String.format("%s %s battery is %d days old.", side, brand, days);
                 mMessageBarTV.setText(msg);
             }
             else {
-                String msg = String.format("%s battery lasted %d days.", brand, days);
+                String msg = String.format("%s %s battery lasted %d days.", side, brand, days);
                 mMessageBarTV.setText(msg);
             }
         } else {
-            mMessageBarTV.setText("");
+            hideMessageBar();
         }
 
+    }
+
+    private void hideMessageBar() {
+        mAdapter.clearSelectedPosition();
+        mMessageBarTV.setText("");
+        mUndoButton.setVisibility(View.GONE);
+        mMessageBarGroup.setVisibility(View.GONE);
     }
 
     public void updateBattery(BatteryEntry b) {
@@ -240,6 +276,27 @@ public class BatteryListFragment extends ListFragment {
     public void deleteBattery(BatteryEntry b) {
         if(b != null) {
             mBatteryLog.deleteBattery(b);
+
+            if(mUndoList == null) {
+                mUndoList = new ArrayList<>();
+            }
+
+            mUndoList.add(b);
+        }
+    }
+
+    public void clearUndoList() {
+        if(mUndoList != null) {
+            mUndoList.clear();
+        }
+        mUndoButton.setVisibility(View.GONE);
+    }
+
+    public void showUndoMessage() {
+        if(mUndoList != null) {
+            mMessageBarGroup.setVisibility(View.VISIBLE);
+            mMessageBarTV.setText(getText(R.string.deleted) + " " + mUndoList.size());
+            mUndoButton.setVisibility(View.VISIBLE);
         }
     }
 

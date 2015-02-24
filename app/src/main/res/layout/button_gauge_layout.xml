@@ -46,7 +46,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="24dp"
+        android:layout_height="12dp"
         android:id="@+id/GaugeLayout">
 
         <ProgressBar
@@ -60,7 +60,6 @@
             android:visibility="visible"
             style="@style/ProgressBarBlueTheme"
             android:padding="0dp"
-            android:progressDrawable="@drawable/progress_bar_color_left"
             android:layout_margin="4dp"/>
 
         <ProgressBar
@@ -74,7 +73,6 @@
             android:visibility="visible"
             style="@style/ProgressBarRedTheme"
             android:padding="0dp"
-            android:progressDrawable="@drawable/progress_bar_color_right"
             android:layout_margin="4dp"/>
     </LinearLayout>
 

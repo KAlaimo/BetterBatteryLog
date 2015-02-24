@@ -8,7 +8,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import org.json.JSONException;
 
@@ -97,8 +96,11 @@ public class MainActivity extends ActionBarActivity implements BatteryListFragme
     private void deleteBattery(BatteryEntry b) {
         BatteryListFragment frag = (BatteryListFragment) getFragmentManager().findFragmentById(R.id.fragmentBatteryList);
         if(frag != null) {
+            frag.clearUndoList();
             frag.deleteBattery(b);
-            frag.sortListByInstallDate();                    }
+            frag.sortListByInstallDate();
+            frag.showUndoMessage();
+        }
     }
 
     private void updateProgress() {
@@ -114,19 +116,6 @@ public class MainActivity extends ActionBarActivity implements BatteryListFragme
             frag.setButtonPreferences();
         }
     }
-
-    /**
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        if(l == mLogListView) {
-            BatteryListAdapter adapter = (BatteryListAdapter) l.getAdapter();
-            BatteryEntry b = adapter.getItem(position);
-
-            Toast toast = Toast.makeText(this, b.toString(), Toast.LENGTH_SHORT);
-            toast.show();
-        }
-    } */
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

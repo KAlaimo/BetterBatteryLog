@@ -136,7 +136,11 @@ public class MainActivity extends ActionBarActivity implements BatteryListFragme
             Intent settingsIntent = new Intent(this, UserSettingsActivity.class);
             startActivityForResult(settingsIntent, CHANGE_SETTINGS_REQUEST_CODE);
             return true;
+        } else if(id == R.id.action_statistics) {
+            Intent statsIntent = new Intent(this, StatsActivity.class);
+            startActivity(statsIntent);
         }
+
 
         return super.onOptionsItemSelected(item);
     }

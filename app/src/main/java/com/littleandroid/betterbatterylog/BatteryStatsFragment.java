@@ -49,6 +49,7 @@ public class BatteryStatsFragment extends Fragment {
         if(titleTV != null) {
             if (mStatsCategory == STATS_BOTH) {
                 titleTV.setText("Overall Stats");
+                showSummary(null);
             } else if (mStatsCategory == STATS_LEFT) {
                 titleTV.setText(R.string.left);
                 titleTV.setTextColor(getResources().getColor(R.color.color_light_blue));
@@ -56,15 +57,39 @@ public class BatteryStatsFragment extends Fragment {
                 LinearLayout header = (LinearLayout) getView().findViewById(R.id.headingLinearLayout);
                 header.setBackgroundColor(getResources().getColor(R.color.color_left_blue));
 
+                showSummary(Side.LEFT);
+
             } else if (mStatsCategory == STATS_RIGHT) {
                 titleTV.setText(R.string.right);
                 titleTV.setTextColor(getResources().getColor(R.color.color_light_red));
 
                 LinearLayout header = (LinearLayout) getView().findViewById(R.id.headingLinearLayout);
                 header.setBackgroundColor(getResources().getColor(R.color.color_right_red));
+
+                showSummary(Side.RIGHT);
             }
         } else {
             Log.i(TAG, "titleTV is null");
         }
+    }
+
+    private void showSummary(Side side) {
+        TextView summaryTV = (TextView) getView().findViewById(R.id.summaryTextView);
+
+        BatteryLog batteryLog = BatteryLog.get(getView().getContext());
+        int batteryCount = batteryLog.getBatteryCount(side);
+        String bestBrand = batteryLog.getBestBrand(side);
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("Total batteries logged: ")
+                .append(batteryCount)
+                .append("\nAverage lifespan: ")
+                .append(batteryLog.averageLifeInDays(side))
+                .append(" days")
+                .append("\nBrand with best lifespan: ")
+                .append(bestBrand);
+        summaryTV.setText(builder.toString());
+
+
     }
 }

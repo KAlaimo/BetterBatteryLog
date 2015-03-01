@@ -6,6 +6,8 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -35,38 +37,6 @@ public class BatteryLog {
         } catch (Exception e) {
             mBatteries = new ArrayList<>();
             //addFakeEntries();
-        }
-    }
-
-    private void addFakeEntries() {
-
-        Log.i(TAG, "No file. Faking it...");
-        /** For testing, start with 20 fake entries */
-        Date today = new Date();
-        for(int i = 0; i < 20; ++i) {
-            BatteryEntry b;
-
-            /** alternate between left and right */
-            if(i % 2 == 0) {
-                b = new BatteryEntry(Side.LEFT);
-            }
-            else {
-                b = new BatteryEntry(Side.RIGHT);
-            }
-
-            if(i == 0) {
-                Date installDate = new Date(today.getTime() - DateUtils.DAY_IN_MILLIS);
-                b.setInstallDate(installDate);
-            }
-            else if (i > 0) {
-                Date installDate = new Date(today.getTime() - (DateUtils.DAY_IN_MILLIS * i * 7));
-                b.setInstallDate(installDate);
-                if (i > 1) {
-                    Date diedDate = new Date(installDate.getTime() + (DateUtils.DAY_IN_MILLIS * 14));
-                    b.setDiedDate(diedDate);
-                }
-            }
-            addBattery(b);
         }
     }
 
@@ -129,7 +99,24 @@ public class BatteryLog {
         int avg = 0;
 
         for(BatteryEntry b : mBatteries) {
-            if(side == b.getSide() && !b.isLost() && b.getDiedDate() != null) {
+            if((side == b.getSide() || side == null) && !b.isLost() && b.getDiedDate() != null) {
+                ++count;
+                daySum = daySum + b.getLifeSpanDays();
+            }
+        }
+        if(count > 0) {
+            avg = daySum / count;
+        }
+        return avg;
+    }
+
+    public int averageLifeInDays(Side side, String brand) {
+        int count = 0;
+        int daySum = 0;
+        int avg = 0;
+
+        for(BatteryEntry b : mBatteries) {
+            if(brand.contentEquals(b.getBatteryBrand()) && (side == null || side == b.getSide()) && !b.isLost() && b.getDiedDate() != null) {
                 ++count;
                 daySum = daySum + b.getLifeSpanDays();
             }
@@ -156,5 +143,57 @@ public class BatteryLog {
             days = b.getLifeSpanDays();
         }
         return days;
+    }
+
+    public int getBatteryCount() {
+        return mBatteries.size();
+    }
+
+    public int getBatteryCount(Side side) {
+        int count = 0;
+        if(side == null) {
+            count = getBatteryCount();
+        } else {
+            for (BatteryEntry b : mBatteries) {
+                if (b.getSide() == side) {
+                    ++count;
+                }
+            }
+        }
+        return count;
+    }
+
+    public HashMap<String, Integer> getBrandLifeMap(Side side) {
+        HashMap<String, Integer> brandTally = new HashMap<>();
+        for(BatteryEntry b : mBatteries) {
+            String brand = b.getBatteryBrand();
+            if(brand != null) {
+                if (!(brandTally.containsKey(brand))) {
+                    int brandLife = averageLifeInDays(side, brand);
+                    brandTally.put(brand, brandLife);
+                }
+            }
+        }
+
+        Log.i(TAG, "HashMap size: " + brandTally.size()) ;
+        return brandTally;
+    }
+
+    public String getBestBrand(Side side) {
+        HashMap<String, Integer> brandLifeMap = getBrandLifeMap(side);
+        int bestBrandLife = 0;
+        String bestBrand = null;
+
+        Set<String> keys = brandLifeMap.keySet();
+        for(String k : keys) {
+            Integer avgLife = brandLifeMap.get(k);
+            Log.i(TAG, "key " + k + " value " + avgLife);
+            if(avgLife > bestBrandLife) {
+                bestBrand = k;
+                bestBrandLife = avgLife;
+            }
+        }
+
+        return bestBrand;
     }
 }

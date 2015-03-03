@@ -25,7 +25,6 @@
     <string name="clear">Clear</string>
     <string name="not_set">(not set)</string>
     <string name="undo">Undo Delete</string>
-    <string name="statistics">Statistics</string>
     <string name="empty_list_message">Welcome! Press the blue or red button above to log your first battery.</string>
 
     <string name="user_settings">User Settings</string>
@@ -36,6 +35,12 @@
     <string name="title_activity_user_settings">User Settings</string>
     <string name="pref_which_ears">pref_which_ears</string>
     <string name="pref_which_brand">pref_which_brand</string>
-    <string name="title_activity_stats">Battery Use Statistics</string>
 
+    <string name="title_activity_stats">Battery Use Statistics</string>
+    <string name="statistics">Statistics</string>
+    <string name="action_send_report">Send Report</string>
+    <string name="report_title">Hearing Aid Battery Usage</string>
+    <string name="report_overall">Overall Usage Statistics</string>
+    <string name="report_left">Left Battery Usage</string>
+    <string name="report_right">Right Battery Usage</string>
 </resources>

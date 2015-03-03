@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 /**
  * Created by Kristen on 2/28/2015.
  */
@@ -17,21 +20,22 @@ public class BatteryStatsFragment extends Fragment {
     private final static String TAG = "BBL-BatteryStatsFrag";
 
     public final static String STATS_CATEGORY_KEY = "category";
-    public final static int STATS_BOTH = 0;
+    public final static int STATS_OVERALL = 0;
     public final static int STATS_LEFT = 1;
     public final static int STATS_RIGHT = 2;
 
     private int mStatsCategory;
+    private String mReport;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Preserve across reconfigurations
-        //setRetainInstance(true);
+        setRetainInstance(true);
 
         // Get arguments
-        mStatsCategory = getArguments().getInt(STATS_CATEGORY_KEY, STATS_BOTH);
+        mStatsCategory = getArguments().getInt(STATS_CATEGORY_KEY, STATS_OVERALL);
     }
 
     @Override
@@ -47,7 +51,7 @@ public class BatteryStatsFragment extends Fragment {
 
         TextView titleTV = (TextView) getView().findViewById(R.id.statsTitleTextView);
         if(titleTV != null) {
-            if (mStatsCategory == STATS_BOTH) {
+            if (mStatsCategory == STATS_OVERALL) {
                 titleTV.setText("Overall Stats");
                 showSummary(null);
             } else if (mStatsCategory == STATS_LEFT) {
@@ -78,18 +82,36 @@ public class BatteryStatsFragment extends Fragment {
 
         BatteryLog batteryLog = BatteryLog.get(getView().getContext());
         int batteryCount = batteryLog.getBatteryCount(side);
-        String bestBrand = batteryLog.getBestBrand(side);
+        int lostCount = batteryLog.getLostBatteryCount(side);
+        BatteryLog.BrandStats stats = batteryLog.getBestBrand(side);
 
         StringBuilder builder = new StringBuilder();
+        if(mStatsCategory == STATS_OVERALL) {
+            String startDateString = DateFormat.getDateInstance(DateFormat.SHORT).format(batteryLog.getStartDate());
+            String todayDateString = DateFormat.getDateInstance(DateFormat.SHORT).format(new Date());
+            builder.append("From ")
+                    .append(startDateString)
+                    .append(" to ")
+                    .append(todayDateString)
+                    .append("\n");
+        }
         builder.append("Total batteries logged: ")
                 .append(batteryCount)
+                .append("\nBatteries lost or discarded early: ")
+                .append(lostCount)
                 .append("\nAverage lifespan: ")
                 .append(batteryLog.averageLifeInDays(side))
                 .append(" days")
                 .append("\nBrand with best lifespan: ")
-                .append(bestBrand);
-        summaryTV.setText(builder.toString());
+                .append(stats.getBrandName())
+                .append(", averaging ")
+                .append(stats.getAverageLifespan())
+                .append(" days per battery.");
+        mReport = builder.toString();
+        summaryTV.setText(mReport);
+    }
 
-
+    public String getReport() {
+        return mReport;
     }
 }

@@ -16,6 +16,7 @@
     <string name="side_select">Which hearing aid?</string>
     <string name="battery_lost">Lost or discarded?</string>
     <string name="battery_brand">Battery brand</string>
+    <string name="add_brand">Add brand...</string>
     <string name="delete">Delete</string>
     <string name="deleted">Deleted</string>
     <string name="delete_entry">Delete this entry?</string>
@@ -34,7 +35,6 @@
     <string name="ear_select_summary">Select left, right or both.</string>
     <string name="title_activity_user_settings">User Settings</string>
     <string name="pref_which_ears">pref_which_ears</string>
-    <string name="pref_which_brand">pref_which_brand</string>
 
     <string name="title_activity_stats">Battery Use Statistics</string>
     <string name="statistics">Statistics</string>

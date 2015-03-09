@@ -2,7 +2,6 @@ package com.littleandroid.betterbatterylog;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +13,11 @@ import java.util.ArrayList;
 
 /**
  * Created by Kristen on 1/25/2015.
+ * Adapter for main battery log ListView.
  */
 public class BatteryListAdapter extends ArrayAdapter<BatteryEntry> {
 
-    private static final String TAG = "BBL-BatteryListAdapter";
+    //private static final String TAG = "BBL-BatteryListAdapter";
 
     private Context mContext;
     private int mSelectedPosition;
@@ -61,7 +61,7 @@ public class BatteryListAdapter extends ArrayAdapter<BatteryEntry> {
                 diedDateTV.setTextColor(mContext.getResources().getColor(R.color.color_light_gray));
             }
             else {
-                diedDateTV.setTextColor(mContext.getResources().getColor(R.color.color_dark_gray));
+                diedDateTV.setTextColor(mContext.getResources().getColorStateList(R.color.list_text_color));
             }
         }
         else {

@@ -30,7 +30,7 @@
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/sideCharTextView"
         android:layout_toEndOf="@+id/sideCharTextView"
-        android:textColor="@color/color_dark_gray"
+        android:textColor="@color/list_text_color"
         android:padding="2dp"
         android:singleLine="true"/>
 
@@ -45,7 +45,7 @@
         android:layout_toEndOf="@+id/installDateTextView"
         android:padding="2dp"
         android:singleLine="true"
-        android:textColor="@color/color_dark_gray"/>
+        android:textColor="@color/list_text_color"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -58,7 +58,7 @@
         android:layout_toEndOf="@+id/diedDateTextView"
         android:padding="2dp"
         android:singleLine="true"
-        android:textColor="@color/color_dark_gray"
+        android:textColor="@color/list_text_color"
         android:layout_centerVertical="true"/>
 
 </RelativeLayout>

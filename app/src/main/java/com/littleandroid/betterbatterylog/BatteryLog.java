@@ -20,7 +20,6 @@ public class BatteryLog {
     private static final String FILENAME = "batterylog.json";
 
     private static BatteryLog mBatteryLog;
-    private Context mAppContext;
     private ArrayList<BatteryEntry> mBatteries;
     private BatteryLogJSONSerializer mSerializer;
 
@@ -52,9 +51,8 @@ public class BatteryLog {
 
     /** Private constructor for singleton */
     private BatteryLog(Context appContext) {
-        mAppContext = appContext;
 
-        mSerializer = new BatteryLogJSONSerializer(mAppContext, FILENAME);
+        mSerializer = new BatteryLogJSONSerializer(appContext, FILENAME);
         try {
             mBatteries = mSerializer.loadBatteryLog();
             Log.i(TAG, "File loaded.");
@@ -240,8 +238,6 @@ public class BatteryLog {
             }
         }
 
-        BrandStats stats = new BrandStats(bestBrand, bestBrandLife);
-
-        return stats;
+        return (new BrandStats(bestBrand, bestBrandLife));
     }
 }

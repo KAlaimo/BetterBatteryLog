@@ -1,17 +1,20 @@
 package com.littleandroid.betterbatterylog;
 
 import android.text.format.DateUtils;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
 /**
  * Created by Kristen on 1/23/2015.
+ * BatteryEntry in log.
  */
 public class BatteryEntry {
     private static final String TAG = "BBL-BatteryEntry";
@@ -65,6 +68,22 @@ public class BatteryEntry {
         }
     }
 
+    private static Date removeTime(@NonNull Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
+
+    private static int daySpan(Date dateStart, Date dateEnd) {
+        Date start = removeTime(dateStart == null ? new Date() : dateStart);
+        Date end = removeTime(dateEnd == null ? new Date() : dateEnd);
+        return (int)((end.getTime() - start.getTime()) / DateUtils.DAY_IN_MILLIS);
+    }
+
     public UUID getId() {
         return mUUID;
     }
@@ -110,24 +129,11 @@ public class BatteryEntry {
     }
 
     public boolean isCurrent() {
-        if(!mLost && mDiedDate == null) {
-            return true;
-        }
-        return false;
+        return (!mLost && mDiedDate == null);
     }
 
     public int getLifeSpanDays() {
-        int days = 0;
-        if(mDiedDate != null) {
-           long milliSecs = mDiedDate.getTime() - mInstallDate.getTime();
-           days = (int)(milliSecs/ DateUtils.DAY_IN_MILLIS);
-        }
-        else {
-            Date today = new Date();
-            long milliSecs = today.getTime() - mInstallDate.getTime();
-            days = (int)(milliSecs/ DateUtils.DAY_IN_MILLIS);
-        }
-        return days;
+        return daySpan(mInstallDate, mDiedDate);
     }
 
     public JSONObject toJSON() throws JSONException {
@@ -147,12 +153,10 @@ public class BatteryEntry {
 
     public static BatteryEntry getInstanceFromJSONString(String jsonString) {
         try {
-            BatteryEntry b = new BatteryEntry(new JSONObject(jsonString));
-            return b;
+            return (new BatteryEntry(new JSONObject(jsonString)));
         } catch (JSONException e) {
             Log.e(TAG, e.toString());
         }
-
         return null;
     }
 

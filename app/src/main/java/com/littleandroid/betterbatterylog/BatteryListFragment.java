@@ -5,7 +5,6 @@ import android.app.ListFragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,6 +24,7 @@ import java.util.Date;
 
 /**
  * Created by Kristen on 1/27/2015.
+ * Fragment that shows battery log ListView and a message bar below.
  */
 public class BatteryListFragment extends ListFragment {
 

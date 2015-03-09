@@ -14,6 +14,8 @@ import java.util.Date;
 
 /**
  * Created by Kristen on 2/28/2015.
+ * Fragment that displays battery log statistics. Builds report string for sharing.
+ * Multiple instances of this fragment will be used in StatsActivity.
  */
 public class BatteryStatsFragment extends Fragment {
 
@@ -26,6 +28,7 @@ public class BatteryStatsFragment extends Fragment {
 
     private int mStatsCategory;
     private String mReport;
+    private View mView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,7 +43,8 @@ public class BatteryStatsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.battery_stats_layout, container, false);
+        mView = inflater.inflate(R.layout.battery_stats_layout, container, false);
+        return mView;
     }
 
     @Override
@@ -49,16 +53,17 @@ public class BatteryStatsFragment extends Fragment {
 
         Log.i(TAG, "Entered onActivityCreated");
 
-        TextView titleTV = (TextView) getView().findViewById(R.id.statsTitleTextView);
+        TextView titleTV = (TextView) mView.findViewById(R.id.statsTitleTextView);
         if(titleTV != null) {
             if (mStatsCategory == STATS_OVERALL) {
                 titleTV.setText("Overall Stats");
+                titleTV.setTextColor(getResources().getColor(android.R.color.white));
                 showSummary(null);
             } else if (mStatsCategory == STATS_LEFT) {
                 titleTV.setText(R.string.left);
                 titleTV.setTextColor(getResources().getColor(R.color.color_light_blue));
 
-                LinearLayout header = (LinearLayout) getView().findViewById(R.id.headingLinearLayout);
+                LinearLayout header = (LinearLayout) mView.findViewById(R.id.headingLinearLayout);
                 header.setBackgroundColor(getResources().getColor(R.color.color_left_blue));
 
                 showSummary(Side.LEFT);
@@ -67,7 +72,7 @@ public class BatteryStatsFragment extends Fragment {
                 titleTV.setText(R.string.right);
                 titleTV.setTextColor(getResources().getColor(R.color.color_light_red));
 
-                LinearLayout header = (LinearLayout) getView().findViewById(R.id.headingLinearLayout);
+                LinearLayout header = (LinearLayout) mView.findViewById(R.id.headingLinearLayout);
                 header.setBackgroundColor(getResources().getColor(R.color.color_right_red));
 
                 showSummary(Side.RIGHT);
@@ -78,9 +83,9 @@ public class BatteryStatsFragment extends Fragment {
     }
 
     private void showSummary(Side side) {
-        TextView summaryTV = (TextView) getView().findViewById(R.id.summaryTextView);
+        TextView summaryTV = (TextView) mView.findViewById(R.id.summaryTextView);
 
-        BatteryLog batteryLog = BatteryLog.get(getView().getContext());
+        BatteryLog batteryLog = BatteryLog.get(mView.getContext());
         int batteryCount = batteryLog.getBatteryCount(side);
         int lostCount = batteryLog.getLostBatteryCount(side);
         BatteryLog.BrandStats stats = batteryLog.getBestBrand(side);

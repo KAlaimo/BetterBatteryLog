@@ -395,8 +395,8 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
             return true;
         }
         else if(id == R.id.action_menu_clear) {
-            mBattery.setDefaultValues();
-            displayInstallDate();
+            mBattery.setDiedDate(null);
+            mBattery.setLost(false);
             displayDiedDate();
             mLostCheckBox.setChecked(mBattery.isLost());
             return true;

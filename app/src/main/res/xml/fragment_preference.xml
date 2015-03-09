@@ -12,14 +12,6 @@
             android:entries="@array/whichEars"
             android:entryValues="@array/whichEarsValues" />
 
-        <ListPreference
-            android:key="@string/pref_which_brand"
-            android:title="@string/brand_pref"
-            android:summary="@string/brand_pref_summary"
-            android:defaultValue="2"
-            android:entries="@array/batteryBrands"
-            android:entryValues="@array/batteryBrandValues" />
-
 
     </PreferenceCategory>
 

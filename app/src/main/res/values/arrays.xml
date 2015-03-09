@@ -12,53 +12,12 @@
         <item name="R">2</item>
     </string-array>
 
-    <string-array name="batteryBrands">
-        <item name="clea">ClearCell</item>
-        <item name="dura">Duracell</item>
-        <item name="ener">Energizer</item>
-        <item name="extr">ExtraPower</item>
-        <item name="hrcl">HearClear</item>
-        <item name="hrmo">HearMore</item>
-        <item name="huge">Huge</item>
-        <item name="icel">icellTech</item>
-        <item name="lead">Leader</item>
-        <item name="lenm">Lenmar</item>
-        <item name="mara">Maratone</item>
-        <item name="pana">Panasonic</item>
-        <item name="powe">Power One</item>
-        <item name="prem">Premium Batteries</item>
-        <item name="rayo">Rayovac</item>
-        <item name="rena">Renata</item>
-        <item name="sony">Sony</item>
-        <item name="star">Starkey</item>
-        <item name="ultr">UltraLast</item>
-        <item name="xcel">XCell</item>
-        <item name="zeni">ZeniPower</item>
-        <item name="other">Other</item>
+    <string-array name="batteryBrandsShortList">
+        <item>Duracell</item>
+        <item>Energizer</item>
+        <item>Panasonic</item>
+        <item>Rayovac</item>
+        <item>Sony</item>
     </string-array>
 
-    <string-array name="batteryBrandValues">
-        <item name="clea">0</item>
-        <item name="dura">1</item>
-        <item name="ener">2</item>
-        <item name="extr">3</item>
-        <item name="hrcl">4</item>
-        <item name="hrmo">5</item>
-        <item name="huge">6</item>
-        <item name="icel">7</item>
-        <item name="lead">8</item>
-        <item name="lenm">9</item>
-        <item name="mara">10</item>
-        <item name="pana">11</item>
-        <item name="powe">12</item>
-        <item name="prem">13</item>
-        <item name="rayo">14</item>
-        <item name="rena">15</item>
-        <item name="sony">16</item>
-        <item name="star">17</item>
-        <item name="ultr">18</item>
-        <item name="xcel">19</item>
-        <item name="zeni">20</item>
-        <item name="other">21</item>
-    </string-array>
 </resources>

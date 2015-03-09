@@ -167,6 +167,7 @@ public class BatteryLog {
         return days;
     }
 
+    /** Get earliest install date in log. */
     public Date getStartDate() {
         Date startDate = new Date();
         for(BatteryEntry b : mBatteries) {
@@ -208,7 +209,7 @@ public class BatteryLog {
         return count;
     }
 
-    public HashMap<String, Integer> getBrandLifeMap(Side side) {
+    private HashMap<String, Integer> getBrandLifeMap(Side side) {
         HashMap<String, Integer> brandTally = new HashMap<>();
         for(BatteryEntry b : mBatteries) {
             String brand = b.getBatteryBrand();
@@ -220,7 +221,7 @@ public class BatteryLog {
             }
         }
 
-        Log.i(TAG, "HashMap size: " + brandTally.size()) ;
+        //Log.i(TAG, "HashMap size: " + brandTally.size()) ;
         return brandTally;
     }
 

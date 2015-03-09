@@ -7,7 +7,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBarActivity;
@@ -19,13 +18,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -33,7 +31,6 @@ import org.json.JSONException;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -52,6 +49,9 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
 
     public static final String DATE_KEY = "logDateKey";
     private static final String JSON_KEY = "jsonStringKey";
+
+    private SharedPreferencesHelper mPrefHelper;
+    private  ArrayList<String> mBrandList;
 
     private TextView mInstallDateTV;
     private TextView mDiedDateTV;
@@ -82,9 +82,7 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
 
             Date initialDate = (Date) getArguments().getSerializable(DATE_KEY);
             int[] yearMonthDay = ymdTripleFor(initialDate);
-            DatePickerDialog dialog = new DatePickerDialog(getActivity(), onDateSetListener, yearMonthDay[0], yearMonthDay[1],
-                    yearMonthDay[2]);
-            return dialog;
+            return (new DatePickerDialog(getActivity(), onDateSetListener, yearMonthDay[0], yearMonthDay[1], yearMonthDay[2]));
         }
 
         private void setOnDateSetListener(DatePickerDialog.OnDateSetListener listener) {
@@ -120,17 +118,19 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
         }
 
         // if no brand selected...
-        SharedPreferencesHelper prefHelper = SharedPreferencesHelper.get(this);
+        mPrefHelper = SharedPreferencesHelper.get(this);
         if(mBattery.getBatteryBrand() == null) {
-            String prefBrand = prefHelper.getBrandPreference();
+            String prefBrand = mPrefHelper.getCurrentBrand();
             if(prefBrand != null) {
                 mBattery.setBatteryBrand(prefBrand);
             }
         }
 
         // Setup brand spinner
+        mBrandList = mPrefHelper.getBrandArrayList();
+        mBrandList.add(getResources().getString(R.string.add_brand));
         mBrandSpinner = (Spinner) findViewById(R.id.brandSpinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.simple_spinner_dropdown_item, prefHelper.getBrandArrayList());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.simple_spinner_dropdown_item, mBrandList);
         mBrandSpinner.setAdapter(adapter);
         for(int i = 0; i < adapter.getCount(); ++i) {
             if(adapter.getItem(i).equals(mBattery.getBatteryBrand())) {
@@ -141,7 +141,12 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
         mBrandSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mBattery.setBatteryBrand(parent.getAdapter().getItem(position).toString());
+                String selectedString = parent.getAdapter().getItem(position).toString();
+                if(selectedString.equals(getResources().getString(R.string.add_brand))) {
+                    customizeBrandList();
+                } else {
+                    mBattery.setBatteryBrand(selectedString);
+                }
             }
 
             @Override
@@ -235,7 +240,7 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         GregorianCalendar cal = new GregorianCalendar(year, monthOfYear, dayOfMonth);
         Log.i(TAG, "Tag: " + mDatePickerTag);
-        if(mDatePickerTag == TAG_INSTALL_PICKER) {
+        if(mDatePickerTag.equals(TAG_INSTALL_PICKER)) {
             mBattery.setInstallDate(cal.getTime());
             displayInstallDate();
         }
@@ -288,6 +293,9 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
             try {
                 intent.putExtra(JSON_EXTRA, mBattery.toJSON().toString());
                 setResult(RESULT_OK, intent);
+                if(mBattery.getBatteryBrand() != null) {
+                    mPrefHelper.setCurrentBrand(mBattery.getBatteryBrand());
+                }
             } catch(JSONException e) {
                 Log.e(TAG, e.toString());
                 setResult(RESULT_CANCELED);
@@ -310,6 +318,30 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
             setResult(RESULT_CANCELED);
         }
         finish();
+    }
+
+    private void customizeBrandList() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.add_brand);
+        final EditText input = new EditText(this);
+        builder.setView(input);
+
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String brand = input.getText().toString().trim();
+                if(brand.length() > 0) {
+                    mPrefHelper.addCustomBrand(brand);
+                    mBrandList.add(brand);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(BatteryEntryActivity.this, R.layout.simple_spinner_dropdown_item, mBrandList);
+                    mBrandSpinner.setAdapter(adapter);
+                }
+            }
+        });
+
+        builder.setNegativeButton(android.R.string.cancel, null);
+
+        builder.create().show();
     }
 
     private void confirmationDialog() {

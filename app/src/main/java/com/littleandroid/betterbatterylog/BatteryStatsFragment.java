@@ -2,7 +2,6 @@ package com.littleandroid.betterbatterylog;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,7 @@ import java.util.Date;
  */
 public class BatteryStatsFragment extends Fragment {
 
-    private final static String TAG = "BBL-BatteryStatsFrag";
+    //private final static String TAG = "BBL-BatteryStatsFrag";
 
     public final static String STATS_CATEGORY_KEY = "category";
     public final static int STATS_OVERALL = 0;
@@ -51,7 +50,7 @@ public class BatteryStatsFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Log.i(TAG, "Entered onActivityCreated");
+        //Log.i(TAG, "Entered onActivityCreated");
 
         TextView titleTV = (TextView) mView.findViewById(R.id.statsTitleTextView);
         if(titleTV != null) {
@@ -77,8 +76,6 @@ public class BatteryStatsFragment extends Fragment {
 
                 showSummary(Side.RIGHT);
             }
-        } else {
-            Log.i(TAG, "titleTV is null");
         }
     }
 

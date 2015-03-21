@@ -1,7 +1,6 @@
 package com.littleandroid.betterbatterylog;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,7 +15,7 @@ import java.util.UUID;
  */
 public class BatteryLog {
 
-    private static final String TAG = "BBL-BatteryLog";
+    //private static final String TAG = "BBL-BatteryLog";
     private static final String FILENAME = "batterylog.json";
 
     private static BatteryLog mBatteryLog;
@@ -55,7 +54,7 @@ public class BatteryLog {
         mSerializer = new BatteryLogJSONSerializer(appContext, FILENAME);
         try {
             mBatteries = mSerializer.loadBatteryLog();
-            Log.i(TAG, "File loaded.");
+            //Log.i(TAG, "File loaded.");
         } catch (Exception e) {
             mBatteries = new ArrayList<>();
         }

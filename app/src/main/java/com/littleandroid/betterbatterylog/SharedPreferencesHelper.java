@@ -3,7 +3,6 @@ package com.littleandroid.betterbatterylog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +17,7 @@ import java.util.Set;
  */
 public class SharedPreferencesHelper {
 
-    private static final String TAG = "BBL-SharedPrefHelper";
+    //private static final String TAG = "BBL-SharedPrefHelper";
 
     public static final int BOTH_EARS = 0;
     public static final int LEFT_ONLY = 1;
@@ -58,7 +57,7 @@ public class SharedPreferencesHelper {
             return code;
 
         } catch(NumberFormatException e) {
-            Log.e(TAG, e.toString());
+            //Log.e(TAG, e.toString());
         }
 
         return BOTH_EARS;

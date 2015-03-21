@@ -2,12 +2,7 @@ package com.littleandroid.betterbatterylog;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,18 +11,14 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Created by Kristen on 1/27/2015.
+ * Fragment shows left and right buttons, and left and right gauges.
  */
 public class ButtonGaugeFragment extends Fragment {
 
-    private static final String TAG = "BBL-ButtonGaugeFragment";
+    //private static final String TAG = "BBL-ButtonGaugeFragment";
 
     public interface AddBatteryListener {
         public void onAddBattery(Side side);
@@ -43,8 +34,7 @@ public class ButtonGaugeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.button_gauge_layout, container, false);
-        return v;
+        return inflater.inflate(R.layout.button_gauge_layout, container, false);
 
     }
 
@@ -53,12 +43,13 @@ public class ButtonGaugeFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         // Find views
-        Log.i(TAG, "Entered onActivityCreated()");
+        //Log.i(TAG, "Entered onActivityCreated()");
         mLeftProgressBar = (ProgressBar)getActivity().findViewById(R.id.leftProgressBar);
         mRightProgressBar = (ProgressBar)getActivity().findViewById(R.id.rightProgressBar);
         mLeftButton = (Button)getActivity().findViewById(R.id.leftBigButton);
         mRightButton = (Button)getActivity().findViewById(R.id.rightBigButton);
-        mBatteryLog = BatteryLog.get(getView().getContext());
+       // mBatteryLog = BatteryLog.get(getView().getContext());
+        mBatteryLog = BatteryLog.get(getActivity());
 
         setButtonPreferences();
 

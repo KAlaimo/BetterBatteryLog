@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -14,7 +13,7 @@ import org.json.JSONException;
 
 public class MainActivity extends ActionBarActivity implements BatteryListFragment.BatteryListListener, ButtonGaugeFragment.AddBatteryListener {
 
-    private static final String TAG = "BBL-MainActivity";
+    // private static final String TAG = "BBL-MainActivity";
     private static final int NEW_ENTRY_REQUEST_CODE = 1;
     private static final int ENTRY_EDIT_REQUEST_CODE = 2;
     private static final int CHANGE_SETTINGS_REQUEST_CODE = 3;
@@ -42,7 +41,7 @@ public class MainActivity extends ActionBarActivity implements BatteryListFragme
             explicitIntent.putExtra(BatteryEntryActivity.JSON_EXTRA, b.toJSON().toString());
             startActivityForResult(explicitIntent, ENTRY_EDIT_REQUEST_CODE);
         } catch (JSONException e) {
-            Log.e(TAG, e.toString());
+           // Log.e(TAG, e.toString());
         }
     }
 
@@ -55,8 +54,6 @@ public class MainActivity extends ActionBarActivity implements BatteryListFragme
                     BatteryEntry b = BatteryEntry.getInstanceFromJSONString(jsonString);
                     addBattery(b);
                     updateProgress();
-                } else {
-                    Log.e(TAG, "No intent data found.");
                 }
             } else if(requestCode == ENTRY_EDIT_REQUEST_CODE) {
                 if(data != null) {
@@ -88,7 +85,7 @@ public class MainActivity extends ActionBarActivity implements BatteryListFragme
     private void updateBattery(BatteryEntry b) {
         BatteryListFragment frag = (BatteryListFragment) getFragmentManager().findFragmentById(R.id.fragmentBatteryList);
         if(frag != null) {
-            Log.i(TAG, "Update " + b.toString());
+            // Log.i(TAG, "Update " + b.toString());
             frag.updateBattery(b);
         }
     }

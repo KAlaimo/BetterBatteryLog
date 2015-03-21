@@ -2,7 +2,6 @@ package com.littleandroid.betterbatterylog;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 
 /**
  * Created by Kristen on 2/9/2015.

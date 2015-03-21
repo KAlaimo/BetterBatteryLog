@@ -11,7 +11,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,7 +38,7 @@ import java.util.Locale;
 
 public class BatteryEntryActivity extends ActionBarActivity implements OnDateSetListener {
 
-    private static final String TAG = "BBL-BatteryEntry";
+    //private static final String TAG = "BBL-BatteryEntry";
     public static final String TAG_INSTALL_PICKER = "installDatePicker";
     public static final String TAG_DIED_PICKER = "diedDatePicker";
 
@@ -184,7 +183,7 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
                 }
                 DatePickerFragment frag = DatePickerFragment.newInstance(d, BatteryEntryActivity.this);
                 mDatePickerTag = TAG_INSTALL_PICKER;
-                Log.i(TAG, "Showing install date picker.");
+                //Log.i(TAG, "Showing install date picker.");
                 frag.show(getFragmentManager(), mDatePickerTag);
             }
         });
@@ -200,7 +199,7 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
                 }
                 DatePickerFragment frag = DatePickerFragment.newInstance(d, BatteryEntryActivity.this);
                 mDatePickerTag = TAG_DIED_PICKER;
-                Log.i(TAG, "Showing died date picker.");
+                //Log.i(TAG, "Showing died date picker.");
                 frag.show(getFragmentManager(), mDatePickerTag);
             }
         });
@@ -231,7 +230,7 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
             try {
                 savedInstanceState.putString(JSON_KEY, mBattery.toJSON().toString());
             } catch (JSONException e) {
-                Log.e(TAG, e.toString());
+                //Log.e(TAG, e.toString());
             }
         }
     }
@@ -239,7 +238,7 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         GregorianCalendar cal = new GregorianCalendar(year, monthOfYear, dayOfMonth);
-        Log.i(TAG, "Tag: " + mDatePickerTag);
+        //Log.i(TAG, "Tag: " + mDatePickerTag);
         if(mDatePickerTag.equals(TAG_INSTALL_PICKER)) {
             mBattery.setInstallDate(cal.getTime());
             displayInstallDate();
@@ -297,7 +296,7 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
                     mPrefHelper.setCurrentBrand(mBattery.getBatteryBrand());
                 }
             } catch(JSONException e) {
-                Log.e(TAG, e.toString());
+                //Log.e(TAG, e.toString());
                 setResult(RESULT_CANCELED);
             }
 
@@ -314,7 +313,7 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
             intent.putExtra(DELETE_FLAG_EXTRA, true);
             setResult(RESULT_OK, intent);
         } catch(JSONException e) {
-            Log.e(TAG, e.toString());
+            //Log.e(TAG, e.toString());
             setResult(RESULT_CANCELED);
         }
         finish();
@@ -335,6 +334,7 @@ public class BatteryEntryActivity extends ActionBarActivity implements OnDateSet
                     mBrandList.add(brand);
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(BatteryEntryActivity.this, R.layout.simple_spinner_dropdown_item, mBrandList);
                     mBrandSpinner.setAdapter(adapter);
+                    mBrandSpinner.setSelection(mBrandList.size() - 1);
                 }
             }
         });

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Better Battery Log</string>
+    <string name="app_name">Battery Log Buddy</string>
     <string name="action_settings">Settings</string>
     <string name="left">Left</string>
     <string name="right">Right</string>
@@ -29,8 +29,6 @@
     <string name="empty_list_message">Welcome! Press the blue or red button above to log your first battery.</string>
 
     <string name="user_settings">User Settings</string>
-    <string name="brand_pref">Battery brand</string>
-    <string name="brand_pref_summary">Set your preferred battery brand.</string>
     <string name="ear_select">How many hearing aids</string>
     <string name="ear_select_summary">Select left, right or both.</string>
     <string name="title_activity_user_settings">User Settings</string>

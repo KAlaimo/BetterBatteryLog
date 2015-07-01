@@ -1,19 +1,26 @@
 package com.littleandroid.betterbatterylog;
 
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import org.json.JSONException;
 
 
 public class MainActivity extends ActionBarActivity implements BatteryListFragment.BatteryListListener, ButtonGaugeFragment.AddBatteryListener {
 
-    // private static final String TAG = "BBL-MainActivity";
+    private static final String TAG = "BBL-MainActivity";
+    private static final String TAG_BUTTON_GAUGE_FRAG = "Button Frag";
+    private static final String TAG_BATTERY_LIST_FRAG = "Battery List Frag";
+
     private static final int NEW_ENTRY_REQUEST_CODE = 1;
     private static final int ENTRY_EDIT_REQUEST_CODE = 2;
     private static final int CHANGE_SETTINGS_REQUEST_CODE = 3;
@@ -22,6 +29,20 @@ public class MainActivity extends ActionBarActivity implements BatteryListFragme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_activity_main);
+
+        // Initialize fragments
+        FragmentManager fm = getFragmentManager();
+        ButtonGaugeFragment buttonGaugeFrag = (ButtonGaugeFragment) fm.findFragmentByTag(TAG_BUTTON_GAUGE_FRAG);
+        BatteryListFragment batteryListFrag = (BatteryListFragment) fm.findFragmentByTag(TAG_BATTERY_LIST_FRAG);
+        if(buttonGaugeFrag == null && batteryListFrag == null) {
+            Log.i(TAG, "adding fragments");
+            FragmentTransaction fragTransaction = fm.beginTransaction();
+            fragTransaction.add(R.id.main_fragment_container, new ButtonGaugeFragment(), TAG_BUTTON_GAUGE_FRAG);
+            fragTransaction.add(R.id.main_fragment_container, new BatteryListFragment(), TAG_BATTERY_LIST_FRAG);
+            fragTransaction.commit();
+        } else {
+            Log.i(TAG, "both fragments already exist");
+        }
 
         // Initialize with default settings.
         PreferenceManager.setDefaultValues(this, R.xml.fragment_preference, false);
@@ -76,14 +97,14 @@ public class MainActivity extends ActionBarActivity implements BatteryListFragme
     }
 
     private void addBattery(BatteryEntry b) {
-        BatteryListFragment frag = (BatteryListFragment) getFragmentManager().findFragmentById(R.id.fragmentBatteryList);
+        BatteryListFragment frag = (BatteryListFragment) getFragmentManager().findFragmentByTag(TAG_BATTERY_LIST_FRAG);
         if(frag != null) {
             frag.addBatteryToList(b);
         }
     }
 
     private void updateBattery(BatteryEntry b) {
-        BatteryListFragment frag = (BatteryListFragment) getFragmentManager().findFragmentById(R.id.fragmentBatteryList);
+        BatteryListFragment frag = (BatteryListFragment) getFragmentManager().findFragmentByTag(TAG_BATTERY_LIST_FRAG);
         if(frag != null) {
             // Log.i(TAG, "Update " + b.toString());
             frag.updateBattery(b);
@@ -91,7 +112,7 @@ public class MainActivity extends ActionBarActivity implements BatteryListFragme
     }
 
     private void deleteBattery(BatteryEntry b) {
-        BatteryListFragment frag = (BatteryListFragment) getFragmentManager().findFragmentById(R.id.fragmentBatteryList);
+        BatteryListFragment frag = (BatteryListFragment) getFragmentManager().findFragmentByTag(TAG_BATTERY_LIST_FRAG);
         if(frag != null) {
             frag.clearUndoList();
             frag.deleteBattery(b);
@@ -101,14 +122,14 @@ public class MainActivity extends ActionBarActivity implements BatteryListFragme
     }
 
     private void updateProgress() {
-        ButtonGaugeFragment frag = (ButtonGaugeFragment) getFragmentManager().findFragmentById(R.id.fragmentButtonGauge);
+        ButtonGaugeFragment frag = (ButtonGaugeFragment) getFragmentManager().findFragmentByTag(TAG_BUTTON_GAUGE_FRAG);
         if(frag != null) {
             frag.updateProgress();
         }
     }
 
     private void updatePreferences() {
-        ButtonGaugeFragment frag = (ButtonGaugeFragment) getFragmentManager().findFragmentById(R.id.fragmentButtonGauge);
+        ButtonGaugeFragment frag = (ButtonGaugeFragment) getFragmentManager().findFragmentByTag(TAG_BUTTON_GAUGE_FRAG);
         if(frag != null) {
             frag.setButtonPreferences();
         }

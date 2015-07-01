@@ -33,9 +33,14 @@ public class ButtonGaugeFragment extends Fragment {
     private BatteryLog mBatteryLog;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.button_gauge_layout, container, false);
-
     }
 
     @Override
